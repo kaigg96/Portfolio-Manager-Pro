@@ -6,7 +6,8 @@ The purpose of this project is to allow users to
 create their own stock portfolio containing shares 
 of common stock in publicly traded companies. The 
 user's portfolio will be composed of a cash balance
-as well as any shares owned by the user.
+as well as any shares owned by the user. Companies 
+will be defined in a separate class.
 
 This application is designed for **all** users, because
 **investing should be for everyone**. This
@@ -27,16 +28,16 @@ finance field.
   balance.
 
 - As a user, I want to be able to add shares 
-  of a listed company to my portfolio using my cash.
+  of a listed company into my portfolio using my 
+  cash.
+  - Company and portfolio are different classes.
 
-- As a user, I want to be able to sell shares, adding
-  the proceeds to my cash balance.
-
-- As a user, I want my portfolio to track all my 
-holdings, updating with any purchases/sales of shares.
+- As a user, I want to be able to sell shares, removing
+  them from my portfolio and adding the proceeds to my 
+  cash balance.
 
 - As a user, I want to be able to request a company
-be listed on this application
+be listed on this application.
   - Once a new company is listed, users will be able 
   to buy and sell shares of that company.
   
