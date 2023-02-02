@@ -5,7 +5,7 @@
 The purpose of this project is to allow users to 
 create their own stock portfolio containing shares 
 of common stock in publicly traded companies. The 
-user's portfolio will be composed of a cash balance
+user's portfolio will be a class containing a cash balance
 as well as any shares owned by the user. Companies 
 will be defined in a separate class.
 
