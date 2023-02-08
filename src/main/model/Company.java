@@ -1,52 +1,47 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // Represents a company with a name, ticker, share price, and market cap
 public class Company {
-    String name;
-    String ticker;
-    int sharesHeld;
+    private String name;
+    private String ticker;
     //    String sector;                   <--- may add later
-    double sharePrice;
-    double marketCapitalization;
+    private double sharePrice;
+    private double marketCapitalization;
+    private int sharesHeld;
 
     // EFFECTS: construct a company with a name, ticker, 0 shares held, share price, and market cap
-    Company(String name, String ticker, double sharePrice, double marketCap) {
+    Company(String name, String ticker, double sharePrice, double marketCap, int sharesHeld) {
         this.name = name;
         this.ticker = ticker;
-        this.sharesHeld = 0;
         this.sharePrice = sharePrice;
         this.marketCapitalization = marketCap;
+        this.sharesHeld = sharesHeld;
     }
 
-    //ArrayList<Company> listedCompanies = new ArrayList<>();
-    //listedCompanies.add(new Company("Apple", "AAPL", 0, 135, 2140));
-    //listedCompanies.add(new Company("Microsoft", "MSFT", 0, 145, 2150));
 
     // EFFECTS: produce an approximation of the number of shares outstanding of the given company
-    double sharesOutstanding() {
-        return (marketCapitalization * 1_000_000_000) / sharePrice;
-    }
+    //double sharesOutstanding() {
+    //    return (marketCapitalization * 1_000_000_000) / sharePrice;
+    //}
 
     // EFFECTS: classify the given company
-    String size() {
+    //String size() {
 
-        if (marketCapitalization >= 100) {
-            return "Mega";
-        } else if (marketCapitalization >= 10) {
-            return "Large";
-        } else if (marketCapitalization >= 1) {
-            return "Mid";
-        } else {
-            return "Small";
-        }
-    }
+    //    if (marketCapitalization >= 100) {
+    //        return "Mega";
+    //    } else if (marketCapitalization >= 10) {
+    //        return "Large";
+    //    } else if (marketCapitalization >= 1) {
+    //        return "Mid";
+    //    } else {
+    //        return "Small";
+    //    }
+    //}
 
     public String getName() {
         return this.name;
     }
+
     public String getTicker() {
         return this.ticker;
     }
@@ -59,10 +54,13 @@ public class Company {
         return this.sharePrice;
     }
 
-    public double getMarketCapitalization() {
+    public double getMarketCap() {
         return this.marketCapitalization;
     }
 
+    public void setSharesHeld(int shares) {
+        this.sharesHeld = shares;
+    }
 
 }
 

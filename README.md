@@ -36,10 +36,8 @@ finance field.
   them from my portfolio and adding the proceeds to my 
   cash balance.
 
-- As a user, I want to be able to request a company
-be listed on this application.
-  - Once a new company is listed, users will be able 
-  to buy and sell shares of that company.
+- As a user, I want to be able to browse listed companies to choose
+which I want to buy.
   
 - As a user, I want to be able to view my portfolio,
 and information on each of the holdings as well as

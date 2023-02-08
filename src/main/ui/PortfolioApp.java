@@ -1,15 +1,19 @@
 package ui;
 
 import model.Portfolio;
-import model.Company;
+import model.ListedCompanies;
 
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
+/*
+
+// The code in this class is largely based on code from the given TellerApp class in the AccountNotRobust - TellerApp
+//   file, with modifications to suit the needs of this program.
 public class PortfolioApp {
+
+    ListedCompanies list = new ListedCompanies();
+
+
 
     public PortfolioApp() {
         runPortfolio();
@@ -65,3 +69,5 @@ public class PortfolioApp {
     }
 
 }
+
+ */
