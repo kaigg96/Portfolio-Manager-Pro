@@ -20,7 +20,6 @@ public class Portfolio {
     // Effects: Adds the given amount of cash to the portfolio's cash balance
     public void addToBalance(double amount) {
         this.cashBalance += amount;
-        System.out.println("Deposit successful! Your new balance is: " + this.cashBalance);
     }
 
     //TODO: change to have a required section to get rid of any print sections
@@ -39,51 +38,26 @@ public class Portfolio {
         }
     }
 
-    //TODO: change to have a required section to get rid of any print sections
-
     // requires: given nameOrTicker belongs to a member of ListedCompanies
     //           cashBalance >= shareNumber * sharePrice
     // modifies: this
-    // effects: add given number of shares of the stated company to the portfolio or produce error
-    // search for given String in list of listed companies (both name and ticker)
-    // if not found, ask if you want to request the company be listed
-    //    implement other method to list company
-    // if company is found, check if sufficient balance to purchase given num of shares
-    //  if sufficient balance, check if shares are already held in this portfolio
-    //    if shares are already held, add to current shares and sub from cash
-    //    if no shares currently held, add holding to portfolio and sub from cash
-    //  if insufficient balance, give error msg
-    public void purchaseShares(String nameOrTicker, int shareNumber) {
-        if (findInListedCompanies(nameOrTicker) != null) {
-            ListedCompanies c = findInListedCompanies(nameOrTicker);
-            if (cashBalance >= shareNumber * c.getSharePrice()) {
-                cashBalance -= shareNumber * c.getSharePrice();
-                if (findIndexOfCompanyInStocks(nameOrTicker) != null) {
-                    Integer i = findIndexOfCompanyInStocks(nameOrTicker);
-                    stocks.get(i).setSharesHeld(stocks.get(i).getSharesHeld() + shareNumber);
-                } else {
-                    stocks.add(new Company(
-                            c.getName(),
-                            c.getTicker(),
-                            c.getSharePrice(),
-                            c.getMktcap(),
-                            shareNumber));
-                }
-            } else {
-                System.out.println("Insufficient balance!");
-            }
+    // effects: subtract shareNumber * sharePrice from cashBalance
+    //          add given number of shares of the stated company to the portfolio
+    //            if shares are already held, add to sharesHeld
+    //            else add holding to portfolio
+    public void purchaseShares(String nameOrTicker, int shareNumber, ListedCompanies c) {
+        cashBalance -= shareNumber * c.getSharePrice();
+        if (findIndexOfCompanyInStocks(nameOrTicker) != null) {
+            Integer i = findIndexOfCompanyInStocks(nameOrTicker);
+            stocks.get(i).setSharesHeld(stocks.get(i).getSharesHeld() + shareNumber);
         } else {
-            System.out.println("This company is not listed!");
+            stocks.add(new Company(
+                    c.getName(),
+                    c.getTicker(),
+                    c.getSharePrice(),
+                    c.getMktcap(),
+                    shareNumber));
         }
-    }
-
-    public ListedCompanies findInListedCompanies(String nameOrTicker) {
-        for (ListedCompanies c : ListedCompanies.values()) {
-            if (c.getName().equals(nameOrTicker) || c.getTicker().equals(nameOrTicker)) {
-                return c;
-            }
-        }
-        return null;
     }
 
     public Integer findIndexOfCompanyInStocks(String nameOrTicker) {
@@ -127,6 +101,14 @@ public class Portfolio {
 
     //public Company findCompanyInStocks(String nameOrTicker) {
 
+    public Company findCompanyInStocks(String nameOrTicker) {
+        for (Company company : stocks) {
+            if (company.getName().equals(nameOrTicker) || company.getTicker().equals(nameOrTicker)) {
+                return company;
+            }
+        }
+        return null;
+    }
 
     public double getCashBalance() {
         return this.cashBalance;

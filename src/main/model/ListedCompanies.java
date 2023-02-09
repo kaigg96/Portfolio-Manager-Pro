@@ -38,6 +38,16 @@ public enum ListedCompanies {
         this.mktcap = mktcap;
     }
 
+    //had to make this static otherwise gives an error. why?
+    public static ListedCompanies findInListedCompanies(String nameOrTicker) {
+        for (ListedCompanies c : ListedCompanies.values()) {
+            if (c.getName().equals(nameOrTicker) || c.getTicker().equals(nameOrTicker)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
     public String getName() {
         return this.name;
     }
