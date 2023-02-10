@@ -1,14 +1,14 @@
 package model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import static model.ListedCompanies.findInListedCompanies;
-import static org.junit.Assert.assertEquals;
 
 public class ListedCompaniesTest {
 
     @Test
-    public void findInListedCompaniesTest() {
+    void findInListedCompaniesTest() {
         assertEquals(ListedCompanies.APPLE, findInListedCompanies("AAPL"));
     }
 }
