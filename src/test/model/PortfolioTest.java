@@ -3,9 +3,8 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class PortfolioTest {
     Portfolio p1;
@@ -49,14 +48,16 @@ class PortfolioTest {
         assertEquals(2, p2.getStocks().get(0).getSharesHeld()); //confirm two shares are owned now
     }
 
-    @Test
-    void purchaseSharesInsuffFundsTest() {
-        p2.purchaseShares("AAPL", 7); //fail to buy shares of company not already in stocks
-        p2.purchaseShares("AAPL", 1); //buy one share so the company is now in the array
-        p2.purchaseShares("AAPL", 6); //fail to buy shares of company already in stocks
-        p2.addToBalance(50); //top up balance to sufficient amount
-        p2.purchaseShares("AAPL", 6); //purchase successfully
-    }
+    // **Now purchaseShares requires sufficient funds so no need to test this
+    //@Test
+    //void purchaseSharesInsuffFundsTest() {
+    //    p2.purchaseShares("AAPL", 7); //fail to buy shares of company not already in stocks
+    //    assertEquals(0, p2.getStocks().size());
+    //    p2.purchaseShares("AAPL", 1); //buy one share so the company is now in the array
+    //    p2.purchaseShares("AAPL", 6); //fail to buy shares of company already in stocks
+    //    p2.addToBalance(50); //top up balance to sufficient amount
+    //    p2.purchaseShares("AAPL", 6); //purchase successfully
+    //}
 
     @Test
     void sellSharesTest() {
@@ -72,7 +73,7 @@ class PortfolioTest {
     void findCompanyInStocksTest () {
         p2.purchaseShares("AAPL", 1);
         p2.purchaseShares("MSFT", 2);
-        assertEquals(null, p2.findCompanyInStocks("BRK"));
+        assertNull(p2.findCompanyInStocks("BRK"));
         assertEquals(p2.getStocks().get(0), p2.findCompanyInStocks("Apple"));
         assertEquals(p2.getStocks().get(1), p2.findCompanyInStocks("MSFT"));
     }
