@@ -11,7 +11,8 @@ class CompanyTest {
 
     @BeforeEach
     void runBefore () {
-        c1 = new Company ("Apple", "AAPL", 135.2, 2140, 101);
+        c1 = new Company ("Apple", "AAPL",
+                135.2, 2140, 101);
     }
 
     @Test

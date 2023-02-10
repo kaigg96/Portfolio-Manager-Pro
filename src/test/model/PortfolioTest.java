@@ -63,6 +63,11 @@ class PortfolioTest {
     void sellSharesTest() {
         p2.purchaseShares("AAPL", 6); //add 6 shares to portfolio
         assertEquals(100, p2.getCashBalance()); //
+        p2.addToBalance(203);
+        p2.purchaseShares("Alphabet", 2); //
+        p2.sellShares("GOOG", 1);
+        p2.sellShares("Alphabet", 1);
+        p2.subFromBalance(203);
         p2.sellShares("AAPL", 1); //sell 1 share by ticker
         assertEquals(250, p2.getCashBalance()); //make sure funds are added to cash bal
         p2.sellShares("Apple", 5); //sell remaining shares by name
@@ -76,7 +81,7 @@ class PortfolioTest {
     @Test
     void findCompanyInStocksTest () {
         p2.purchaseShares("AAPL", 1);
-        p2.purchaseShares("MSFT", 2);
+        p2.purchaseShares("Microsoft", 2);
         assertNull(p2.findCompanyInStocks("BRK"));
         assertEquals(p2.getStocks().get(0), p2.findCompanyInStocks("Apple"));
         assertEquals(p2.getStocks().get(1), p2.findCompanyInStocks("MSFT"));

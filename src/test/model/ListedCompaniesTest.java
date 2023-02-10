@@ -9,7 +9,8 @@ public class ListedCompaniesTest {
 
     @Test
     void findInListedCompaniesTest() {
-        assertEquals(ListedCompanies.APPLE, findInListedCompanies("AAPL"));
+        assertEquals(ListedCompanies.HD, findInListedCompanies("HD"));
+        assertEquals(ListedCompanies.HD, findInListedCompanies("Home Depot"));
         assertNull(findInListedCompanies("LOL"));
     }
 }

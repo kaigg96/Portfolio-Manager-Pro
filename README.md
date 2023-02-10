@@ -24,21 +24,20 @@ finance field.
 
 ### User stories:
 
-- As a user, I want to be able to add cash to my 
-  balance.
+- As a user, I want to be able to deposit and withdraw cash 
+from my cash balance.
 
 - As a user, I want to be able to add shares 
-  of a listed company into my portfolio using my 
-  cash.
+  of a listed company into my portfolio by purchasing them
+with my cash.
   - Company and portfolio are different classes.
 
 - As a user, I want to be able to sell shares, removing
   them from my portfolio and adding the proceeds to my 
   cash balance.
 
-- As a user, I want to be able to browse listed companies to choose
-which I want to buy.
+- As a user, I want to be able to browse listed companies 
+to choose which I want to buy.
   
 - As a user, I want to be able to view my portfolio,
-and information on each of the holdings as well as
-the portfolio composition. 
+holdings and cash balance. 
