@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import static model.ListedCompanies.findInListedCompanies;
+
 // Represents a user's portfolio of cash and a list of stocks held
 public class Portfolio {
 
@@ -45,7 +47,8 @@ public class Portfolio {
     //          add given number of shares of the stated company to the portfolio
     //            if shares are already held, add to sharesHeld
     //            else add holding to portfolio
-    public void purchaseShares(String nameOrTicker, int shareNumber, ListedCompanies c) {
+    public void purchaseShares(String nameOrTicker, int shareNumber) {
+        ListedCompanies c = findInListedCompanies(nameOrTicker);
         cashBalance -= shareNumber * c.getSharePrice();
         if (findIndexOfCompanyInStocks(nameOrTicker) != null) {
             Integer i = findIndexOfCompanyInStocks(nameOrTicker);
@@ -60,6 +63,7 @@ public class Portfolio {
         }
     }
 
+    //TODO: specify method
     public Integer findIndexOfCompanyInStocks(String nameOrTicker) {
         for (int i = 0; i < stocks.size(); i++) {
             Company company = stocks.get(i);
@@ -69,8 +73,6 @@ public class Portfolio {
         }
         return null;
     }
-
-    //TODO: change to have a required section to get rid of any print sections
 
     // requires: sharesHeld in the given company >= given shareNumber to sell
     //           company is currently held in portfolio

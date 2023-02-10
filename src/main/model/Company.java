@@ -19,6 +19,8 @@ public class Company {
     }
 
 
+    //TODO: need any methods for company class?
+
     // EFFECTS: produce an approximation of the number of shares outstanding of the given company
     //double sharesOutstanding() {
     //    return (marketCapitalization * 1_000_000_000) / sharePrice;

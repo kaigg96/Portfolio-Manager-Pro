@@ -185,17 +185,17 @@ public class PortfolioApp {
         System.out.println("Please enter the number of shares you'd like to purchase:");
         int shareNum = userInput.nextInt();
 
-        if (findInListedCompanies(companyID) != null) {
-            ListedCompanies c = findInListedCompanies(companyID);
+        ListedCompanies c = findInListedCompanies(companyID);
+        if (c != null) {
             if (yourPortfolio.getCashBalance() >= shareNum * c.getSharePrice()) {
-                yourPortfolio.purchaseShares(companyID, shareNum, c);
+                yourPortfolio.purchaseShares(companyID, shareNum);
             } else {
                 System.out.println("Insufficient balance!");
-                purchaseStocksMenu(); //go to menu?
+                purchaseStocksMenu();
             }
         } else {
             System.out.println("Company not found!");
-            purchaseStocksMenu(); //go to menu?
+            purchaseStocksMenu();
         }
     }
 
@@ -258,6 +258,5 @@ public class PortfolioApp {
                     + " || Market cap: " + c.getMarketCap());
         }
     }
-
 }
 
