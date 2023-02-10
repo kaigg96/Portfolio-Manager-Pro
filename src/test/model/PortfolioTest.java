@@ -24,14 +24,15 @@ class PortfolioTest {
         assertEquals(0, p1.getCashBalance()); //confirm bal is back to 0
     }
 
-    @Test
-    void subInsufficientFundsTest() {
-        assertEquals(0, p1.getCashBalance());
-        p1.addToBalance(500.); //add 500
-        assertEquals(500, p1.getCashBalance());
-        p1.subFromBalance(500.1); //try to remove 500.1 (more than was added)
-        assertEquals(500, p1.getCashBalance()); //make sure cash stays at 500
-    }
+    //**now required to have sufficient funds to use method so no need for this test
+    //@Test
+    //void subInsufficientFundsTest() {
+    //    assertEquals(0, p1.getCashBalance());
+    //    p1.addToBalance(500.); //add 500
+    //    assertEquals(500, p1.getCashBalance());
+    //    p1.subFromBalance(500.1); //try to remove 500.1 (more than was added)
+    //    assertEquals(500, p1.getCashBalance()); //make sure cash stays at 500
+    //}
 
     @Test
     void purchaseSharesTest() {
@@ -66,6 +67,10 @@ class PortfolioTest {
         assertEquals(250, p2.getCashBalance()); //make sure funds are added to cash bal
         p2.sellShares("Apple", 5); //sell remaining shares by name
         assertEquals(1000, p2.getCashBalance()); //make sure funds are added to cash bal
+        p2.sellShares("APPL", 1); //make sure you can't sell shares of company not in portfolio
+        assertEquals(1000, p2.getCashBalance()); //make sure no change to cash balance
+
+
     }
 
     @Test

@@ -10,5 +10,6 @@ public class ListedCompaniesTest {
     @Test
     void findInListedCompaniesTest() {
         assertEquals(ListedCompanies.APPLE, findInListedCompanies("AAPL"));
+        assertNull(findInListedCompanies("LOL"));
     }
 }

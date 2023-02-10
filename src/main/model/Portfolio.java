@@ -24,20 +24,12 @@ public class Portfolio {
         this.cashBalance += amount;
     }
 
-    //TODO: change to have a required section to get rid of any print sections
-
     // Requires: cashBalance >= amount > 0
     // Modifies: this
     // Effects: If cashBalance > given amount, subtract amount from cashBalance.
     //          else tell the customer this withdrawal cannot be completed
     public void subFromBalance(double amount) {
-        if (this.cashBalance >= amount) {
-            this.cashBalance -= amount;
-            System.out.println("Withdrawal successful! Your remaining balance is: " + this.cashBalance);
-        } else {
-            System.out.println("Insufficient funds! You cannot withdraw " + amount);
-            System.out.println("Your current balance is: " + this.cashBalance);
-        }
+        this.cashBalance -= amount;
     }
 
     // requires: given nameOrTicker belongs to a member of ListedCompanies
