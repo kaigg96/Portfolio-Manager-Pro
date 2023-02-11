@@ -10,21 +10,18 @@ public class Portfolio {
     private double cashBalance;
     private ArrayList<Company> stocks;
 
-    //Effects: Constructs a portfolio with 0 cash
+    //Effects: Constructs a portfolio with 0 cash and empty stocks
     public Portfolio(double cash) {
         cashBalance = cash;
         stocks = new ArrayList<>();
     }
 
-
-    // Requires: amount > 0
     // Modifies: this
     // Effects: Adds the given amount of cash to the portfolio's cash balance
     public void addToBalance(double amount) {
         this.cashBalance += amount;
     }
 
-    // Requires: cashBalance >= amount > 0
     // Modifies: this
     // Effects: If cashBalance > given amount, subtract amount from cashBalance.
     //          else tell the customer this withdrawal cannot be completed
@@ -32,8 +29,6 @@ public class Portfolio {
         this.cashBalance -= amount;
     }
 
-    // requires: given nameOrTicker belongs to a member of ListedCompanies
-    //           cashBalance >= shareNumber * sharePrice
     // modifies: this
     // effects: subtract shareNumber * sharePrice from cashBalance
     //          add given number of shares of the stated company to the portfolio
@@ -55,7 +50,8 @@ public class Portfolio {
         }
     }
 
-    //TODO: specify method
+    // EFFECTS: return the index of the Company in stocks matching the given name or ticker
+    //          if none match, returns null
     public Integer findIndexOfCompanyInStocks(String nameOrTicker) {
         for (int i = 0; i < stocks.size(); i++) {
             Company company = stocks.get(i);
@@ -66,12 +62,9 @@ public class Portfolio {
         return null;
     }
 
-    // requires: sharesHeld in the given company >= given shareNumber to sell
-    //           company is currently held in portfolio
     // modifies: this
-    // effects: if found, remove given number of shares of the stated company from the portfolio, add cash from sale to
+    // effects: remove given number of shares of the stated company from the portfolio, add cash from sale to
     //          cash balance
-    //          else give error
     public void sellShares(String nameOrTicker, int shareNumber) {
         for (int i = 0; i < stocks.size(); i++) {
             Company c = stocks.get(i);
@@ -79,22 +72,15 @@ public class Portfolio {
                 addToBalance(c.getSharePrice() * shareNumber);
                 if (c.getSharesHeld() > shareNumber) {
                     c.setSharesHeld(c.getSharesHeld() - shareNumber);
-                    break;
                 } else {
                     stocks.remove(i);
-                    break;
                 }
             }
         }
     }
-        // search for given String in list of companies in the portfolio (name and ticker)
-        //  if found, check if shares held > shareNumber trying to sell
-        //      if shares held > shareNumber, remove shareNumber from shares held and add to cash balance
-        //      if not, produce error
-        //  if company not found, produce error
 
-    //public Company findCompanyInStocks(String nameOrTicker) {
-
+    // EFFECTS: return the Company in stocks matching the given name or ticker
+    //          if none match, returns null
     public Company findCompanyInStocks(String nameOrTicker) {
         for (Company company : stocks) {
             if (company.getName().equals(nameOrTicker) || company.getTicker().equals(nameOrTicker)) {

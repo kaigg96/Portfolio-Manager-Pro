@@ -9,7 +9,7 @@ import java.util.Scanner;
 import static model.ListedCompanies.findInListedCompanies;
 
 // The code in this class is largely based on code from the given TellerApp class in the AccountNotRobust - TellerApp
-//   file, with modifications to suit the needs of this program.
+//   file (especially parts using the scanner), with modifications to suit the needs of this program.
 public class PortfolioApp {
 
     private Portfolio yourPortfolio;
@@ -19,9 +19,10 @@ public class PortfolioApp {
         runPortfolio();
     }
 
+    // EFFECTS: runs the PortfolioApp
     private void runPortfolio() {
         boolean keepGoing = true; //initialize keepGoing as true
-        String nextStep = null; //initialize ui as null
+        String nextStep; //initialize ui as null
 
         initialize();
 
@@ -39,12 +40,15 @@ public class PortfolioApp {
         System.out.println("Thank you for using Portfolio Manager Pro!");
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the PortfolioApp
     private void initialize() {
         yourPortfolio = new Portfolio(0);
         userInput = new Scanner(System.in);
         userInput.useDelimiter("\n"); //not sure if this is needed
     }
 
+    // EFFECTS: displays the main menu
     private void displayMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\t1 -> Deposit cash");
@@ -56,34 +60,30 @@ public class PortfolioApp {
         System.out.println("\t7 -> Exit Portfolio Manager Pro");
     }
 
+    // MODIFIES: this
+    // EFFECTS: process user input from the main menu
+    //             inputting 7 exits the app, part of the runPortfolio method
     private void processUserInput(String userInput) {
         if (userInput.equals("1")) {
-            // go to deposit menu
             doCashDeposit();
         } else if (userInput.equals("2")) {
-            // go to withdrawal menu
             doCashWithdrawal();
         } else if (userInput.equals("3")) {
-            //go to purchasing menu
             purchaseStocksMenu();
         } else if (userInput.equals("4")) {
-            //go to selling menu
             sellStocksMenu();
         } else if (userInput.equals("5")) {
-            // view portfolio menu
             displayCurrentHoldings();
         } else if (userInput.equals("6")) {
-            //browse listed companies menu
             displayListedCompanies();
- //       } else if (userInput.equals("7")) {
-            //quit
-  //          doSomething7();
         } else {
             System.out.println("Invalid selection! Please try again:");
             displayMenu();
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: deposits cash into YourPortfolio
     private void doCashDeposit() {
         System.out.println("Your current cash balance is " + yourPortfolio.getCashBalance());
         System.out.println("Please enter the amount of cash you would like to deposit:");
@@ -97,6 +97,8 @@ public class PortfolioApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays negative deposit amount menu. Gives user the option to try again or return to main menu
     private void negativeDepositEntry() {
         System.out.println("Please enter a POSITIVE amount to deposit. Would you like to try again?");
         System.out.println("Select from:");
@@ -112,7 +114,8 @@ public class PortfolioApp {
         }
     }
 
-    //method too long probably
+    // MODIFIES: this
+    // EFFECTS: withdraws cash from YourPortfolio
     private void doCashWithdrawal() {
         System.out.println("Your current cash balance is " + yourPortfolio.getCashBalance());
         System.out.println("Please enter the amount of cash you would like to withdraw:");
@@ -127,6 +130,8 @@ public class PortfolioApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays insufficient funds menu. Gives user the option to try again or return to main menu
     private void insufficientFundsEntry() {
         System.out.println("Insufficient balance! Would you like to try again?");
         System.out.println("Select from:");
@@ -142,6 +147,8 @@ public class PortfolioApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays negative withdrawal amount menu. Gives user the option to try again or return to main menu
     private void negativeWithdrawalEntry() {
         System.out.println("Please enter a POSITIVE amount to withdraw. Would you like to try again?");
         System.out.println("Select from:");
@@ -157,6 +164,8 @@ public class PortfolioApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays purchasing stocks menu. Gives user the option buy shares, browse listed companies or exit
     private void purchaseStocksMenu() {
         System.out.println("Your current cash balance is " + yourPortfolio.getCashBalance());
         System.out.println("Please select from:");
@@ -179,6 +188,10 @@ public class PortfolioApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: lets user enter a company name/ticker and a number of shares,
+    //              if company is in ListedCompanies && sufficient balance, buy shares
+    //              else return to purchase stocks menu
     private void doPurchaseStocks() {
         System.out.println("Please enter the name or ticker of the company you'd like to buy shares of:");
         String companyID = userInput.next();
@@ -199,6 +212,7 @@ public class PortfolioApp {
         }
     }
 
+    // EFFECTS: displays all ListedCompanies
     private void displayListedCompanies() {
         for (ListedCompanies c : ListedCompanies.values()) {
             System.out.println("- Name: " + c.getName()
@@ -208,6 +222,8 @@ public class PortfolioApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: displays sell stocks menu. Gives user the option to sell shares, browse held companies or exit
     private void sellStocksMenu() {
         System.out.println("Please select from:");
         System.out.println("1 -> Sell shares of a company in your portfolio");
@@ -229,6 +245,10 @@ public class PortfolioApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: lets user enter a company name/ticker and a number of shares,
+    //              if company is in ListedCompanies && sufficient balance, buy shares
+    //              else return to sell stocks menu
     private void doSellStocks() {
         System.out.println("Please enter the name or ticker of the company you'd like to sell shares of:");
         String companyID = userInput.next();
@@ -249,7 +269,9 @@ public class PortfolioApp {
         }
     }
 
+    // EFFECTS: displays cash balance and list of current holdings
     private void displayCurrentHoldings() {
+        System.out.println(yourPortfolio.getCashBalance());
         for (Company c : yourPortfolio.getStocks()) {
             System.out.println("- Name: " + c.getName()
                     + " || Ticker: " + c.getTicker()

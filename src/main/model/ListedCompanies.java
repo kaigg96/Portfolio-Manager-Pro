@@ -31,6 +31,8 @@ public enum ListedCompanies {
     private final double sharePrice;
     private final double mktcap;
 
+    // REQUIRES: no two ListedCompanies have the same name or ticker
+    // EFFECTS: construct a ListedCompanies with a name, ticker, share price, and market cap
     ListedCompanies(String name, String ticker, double sharePrice, double mktcap) {
         this.name = name;
         this.ticker = ticker;
@@ -38,8 +40,8 @@ public enum ListedCompanies {
         this.mktcap = mktcap;
     }
 
-    //had to make this static otherwise gives an error. why?
-    // TODO: specify
+    // EFFECTS: return the ListedCompanies object matching the given name or ticker
+    //          if none match, returns null
     public static ListedCompanies findInListedCompanies(String nameOrTicker) {
         for (ListedCompanies c : ListedCompanies.values()) {
             if (c.getName().equals(nameOrTicker) || c.getTicker().equals(nameOrTicker)) {
