@@ -86,5 +86,14 @@ class PortfolioTest {
         assertEquals(p2.getStocks().get(0), p2.findCompanyInStocks("Apple"));
         assertEquals(p2.getStocks().get(1), p2.findCompanyInStocks("MSFT"));
     }
+
+    @Test
+    void findIndexOfCompanyInStocksTest () {
+        p2.purchaseShares("Home Depot", 1);
+        p2.purchaseShares("MSFT", 2);
+        assertNull(p2.findCompanyInStocks("BRK"));
+        assertEquals(0, p2.findIndexOfCompanyInStocks("HD"));
+        assertEquals(1, p2.findIndexOfCompanyInStocks("Microsoft"));
+    }
 }
 
