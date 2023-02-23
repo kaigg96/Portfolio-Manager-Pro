@@ -4,6 +4,7 @@ import model.Company;
 
 import java.util.ArrayList;
 
+// An enumeration of all the listed companies, with their name, ticker, share price and market cap
 public enum ListedCompanies {
     APPLE("Apple", "AAPL", 150, 2100),
     ARITZIA("Aritzia", "ATZ", 45.5, 5.18),

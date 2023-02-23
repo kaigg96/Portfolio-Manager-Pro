@@ -16,21 +16,24 @@ public class Portfolio {
         stocks = new ArrayList<>();
     }
 
+    // Requires: amount >= 0
     // Modifies: this
     // Effects: Adds the given amount of cash to the portfolio's cash balance
     public void addToBalance(double amount) {
         this.cashBalance += amount;
     }
 
+    // Requires: cashBalance >= amount >= 0
     // Modifies: this
-    // Effects: If cashBalance > given amount, subtract amount from cashBalance.
-    //          else tell the customer this withdrawal cannot be completed
+    // Effects: subtract amount from cashBalance
     public void subFromBalance(double amount) {
         this.cashBalance -= amount;
     }
 
-    // modifies: this
-    // effects: subtract shareNumber * sharePrice from cashBalance
+    // Requires: cashBalance >= shareNumber * c.getSharePrice()
+    //           c is a member of ListedCompanies
+    // Modifies: this
+    // Effects: subtract shareNumber * sharePrice from cashBalance
     //          add given number of shares of the stated company to the portfolio
     //            if shares are already held, add to sharesHeld
     //            else add holding to portfolio
@@ -62,8 +65,9 @@ public class Portfolio {
         return null;
     }
 
-    // modifies: this
-    // effects: remove given number of shares of the stated company from the portfolio, add cash from sale to
+    // Requires: given nameOrTicker corresponds to a company that is currently in the portfolio
+    // Modifies: this
+    // Effects: remove given number of shares of the stated company from the portfolio, add cash from sale to
     //          cash balance
     public void sellShares(String nameOrTicker, int shareNumber) {
         for (int i = 0; i < stocks.size(); i++) {

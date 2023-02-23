@@ -24,14 +24,6 @@ class CompanyTest {
         assertEquals(2140, c1.getMarketCap());
         assertEquals(101, c1.getSharesHeld());
     }
-
-    //@Test
-    //void testSize() {
-    //    assertEquals("Mega", c1.size());
-    //    assertEquals("Mid", c2.size());
-    //}
-
-
 }
 
 
