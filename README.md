@@ -41,3 +41,8 @@ to choose which I want to buy.
   
 - As a user, I want to be able to view my portfolio,
 holdings and cash balance. 
+
+- As a user, I want to be able to choose if I want to 
+save my portfolio.
+
+- As a user, I want to be able to load a saved portfolio.
