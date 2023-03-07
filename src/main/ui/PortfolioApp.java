@@ -1,24 +1,32 @@
 package ui;
 
 import model.Company;
-import model.Portfolio;
 import model.ListedCompanies;
+import model.Portfolio;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 import static model.ListedCompanies.findInListedCompanies;
 
-// The code in this class is somewhat based on code from the given TellerApp class in the AccountNotRobust - TellerApp
-//   file (especially parts using the scanner), with modifications to suit the needs of this program.
+// The code in this class was adapted from code in the given AccountNotRobust - TellerApp class
+//   file (especially parts using the scanner), and JsonSterilizationDemo - WorkRoomApp class.
 
 // Runs the Portfolio Manager app
 public class PortfolioApp {
 
+    private static final String PATH = "./data/workroom.json";
     private Portfolio yourPortfolio;
     private Scanner userInput;
+    private JsonWriter writer;
+    private JsonReader reader;
 
     public PortfolioApp() {
+        yourPortfolio = new Portfolio(0);
+        userInput = new Scanner(System.in);
+        writer = new JsonWriter(PATH);
+        reader = new JsonReader(PATH);
         runPortfolio();
     }
 
@@ -27,13 +35,13 @@ public class PortfolioApp {
         boolean keepGoing = true; //initialize keepGoing as true
         String nextStep; //initialize ui as null
 
-        initialize();
+        //initialize();
 
         while (keepGoing) { //continues as long as keepGoing bool is true
             displayMenu(); //start by displaying menu
             nextStep = userInput.next();
 
-            if (nextStep.equals("7")) {
+            if (nextStep.equals("9")) {
                 keepGoing = false; //end the loop if the user chooses "Exit Portfolio Manager Pro"
             } else {
                 processUserInput(nextStep);
@@ -44,10 +52,9 @@ public class PortfolioApp {
 
     // MODIFIES: this
     // EFFECTS: initializes the PortfolioApp
-    private void initialize() {
-        yourPortfolio = new Portfolio(0);
-        userInput = new Scanner(System.in);
-    }
+   // private void initialize() {
+
+    //}
 
     // EFFECTS: displays the main menu
     private void displayMenu() {
@@ -58,7 +65,9 @@ public class PortfolioApp {
         System.out.println("\t4 -> Sell stocks");
         System.out.println("\t5 -> View my portfolio");
         System.out.println("\t6 -> Browse listed companies");
-        System.out.println("\t7 -> Exit Portfolio Manager Pro");
+        System.out.println("\t7 -> Save portfolio");
+        System.out.println("\t8 -> Load portfolio");
+        System.out.println("\t9 -> Exit Portfolio Manager Pro");
     }
 
     // MODIFIES: this
@@ -83,6 +92,12 @@ public class PortfolioApp {
                 break;
             case "6":
                 displayListedCompanies();
+                break;
+            case "7":
+                savePortfolio();
+                break;
+            case "8":
+                loadPortfolio();
                 break;
             default:
                 System.out.println("Invalid selection! Please try again:");
@@ -290,6 +305,18 @@ public class PortfolioApp {
                     + " || Share price: " + c.getSharePrice()
                     + " || Market cap: " + c.getMarketCap());
         }
+    }
+
+    private void savePortfolio() {
+        writer.open();
+        writer.write(yourPortfolio);
+        writer.close();
+        System.out.println("Your portfolio has been saved to " + PATH);
+    }
+
+    private void loadPortfolio() {
+        yourPortfolio = reader.read();
+        System.out.println("Your portfolio has been loaded from " + PATH);
     }
 }
 

@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import static model.ListedCompanies.findInListedCompanies;
@@ -10,7 +13,7 @@ public class Portfolio {
     private double cashBalance;
     private ArrayList<Company> stocks;
 
-    //Effects: Constructs a portfolio with 0 cash and empty stocks
+    //Effects: Constructs a portfolio with given cash and empty stocks
     public Portfolio(double cash) {
         cashBalance = cash;
         stocks = new ArrayList<>();
@@ -101,6 +104,23 @@ public class Portfolio {
     public ArrayList<Company> getStocks() {
         return this.stocks;
     }
+
+    // EFFECTS: Create a JSON object for the portfolio
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("Cash Balance", cashBalance);
+        jsonObject.put("Stocks", stocksToJson());
+        return jsonObject;
+    }
+
+    private JSONArray stocksToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Company company : stocks) {
+            jsonArray.put(company.toJson());
+        }
+        return jsonArray;
+    }
+
 }
 
 
