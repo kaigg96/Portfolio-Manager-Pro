@@ -24,6 +24,7 @@ public class PortfolioApp {
     private JsonWriter writer;
     private JsonReader reader;
 
+    // EFFECTS: constructs a PortfolioApp then runs the application
     public PortfolioApp() {
         yourPortfolio = new Portfolio(0);
         userInput = new Scanner(System.in);
@@ -37,8 +38,6 @@ public class PortfolioApp {
         boolean keepGoing = true; //initialize keepGoing as true
         String nextStep; //initialize ui as null
 
-        //initialize();
-
         while (keepGoing) { //continues as long as keepGoing bool is true
             displayMenu(); //start by displaying menu
             nextStep = userInput.next();
@@ -51,12 +50,6 @@ public class PortfolioApp {
         }
         System.out.println("Thank you for using Portfolio Manager Pro!");
     }
-
-    // MODIFIES: this
-    // EFFECTS: initializes the PortfolioApp
-   // private void initialize() {
-
-    //}
 
     // EFFECTS: displays the main menu
     private void displayMenu() {
@@ -299,6 +292,7 @@ public class PortfolioApp {
         }
     }
 
+    // EFFECTS: save yourPortfolio to a JSON file
     private void savePortfolio() {
         try {
             writer.openWriter();
@@ -310,6 +304,7 @@ public class PortfolioApp {
         System.out.println("Your portfolio has been saved to " + PATH);
     }
 
+    // EFFECTS: load yourPortfolio to a JSON file
     private void loadPortfolio() {
         try {
             yourPortfolio = reader.read();

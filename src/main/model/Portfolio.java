@@ -105,7 +105,10 @@ public class Portfolio {
         return this.stocks;
     }
 
-    public void addCompanyToStocks(String name, String ticker, double sharePrice, double marketCap, int sharesHeld) {
+    // MODIFIES: this
+    // EFFECTS: constructs a company with the given arguments and adds it to stocks
+    public void addCompanyToStocks(String name, String ticker, double sharePrice,
+                                   double marketCap, int sharesHeld) {
         stocks.add(new Company(name, ticker, sharePrice, marketCap, sharesHeld));
     }
 
@@ -117,6 +120,7 @@ public class Portfolio {
         return jsonObject;
     }
 
+    // EFFECTS: convert stocks to JSON data
     private JSONArray stocksToJson() {
         JSONArray jsonArray = new JSONArray();
         for (Company company : stocks) {

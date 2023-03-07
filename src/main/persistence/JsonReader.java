@@ -16,20 +16,21 @@ public class JsonReader {
 
     private String source;
 
-    // EFFECTS:
+    // EFFECTS: constructs a reader to read from a JSON file
     public JsonReader(String source) {
         this.source = source;
     }
 
-    // EFFECTS: reads a portfolio from file and returns it
+    // EFFECTS: reads a portfolio from JSON data and returns it
+    //          throws an IOException if the file isn't found
     public Portfolio read() throws IOException {
         String jsonData = readFile(source);
         JSONObject object = new JSONObject(jsonData);
         return parsePortfolio(object);
     }
 
-    // REQUIRES: given source contains code file
     // EFFECTS: reads a source file and returns it
+    //          throws an IOException if the file isn't found
     private String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
 
