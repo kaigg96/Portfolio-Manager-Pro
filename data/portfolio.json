@@ -1,4 +1,1 @@
-{
-  "Cash Balance": 0,
-  "Stocks": []
-}
+{"Stocks":[{"Share Price":150,"Shares Held":2,"Ticker":"AAPL","Name":"Apple","Market Cap":2100}],"Cash Balance":700}

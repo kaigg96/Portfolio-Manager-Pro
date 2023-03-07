@@ -4,7 +4,7 @@ import model.Company;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CompanyTest {
 
@@ -17,7 +17,6 @@ class CompanyTest {
     }
 
     @Test
-
     void gettersAndSetters() {
         assertEquals("Apple", c1.getName());
         assertEquals("AAPL", c1.getTicker());

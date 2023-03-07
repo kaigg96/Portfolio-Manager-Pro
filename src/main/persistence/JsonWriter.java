@@ -34,6 +34,7 @@ public class JsonWriter {
     private void saveToFile(String string) {
         writer.print(string);
     }
+
     // MODIFIES: this
     // EFFECTS: close the writer
     public void closeWriter() {
