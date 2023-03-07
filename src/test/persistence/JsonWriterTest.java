@@ -15,7 +15,7 @@ public class JsonWriterTest {
     @Test
     void testWriterNoCashEmptyStocks() {
         Portfolio p = new Portfolio(0);
-        JsonWriter writer = new JsonWriter("./data/testWriterNoCashEmptyStocks.json");
+        JsonWriter writer = new JsonWriter("./data/testNoCashEmptyStocks.json");
         try {
             writer.openWriter();
         } catch (FileNotFoundException e) {
@@ -24,7 +24,7 @@ public class JsonWriterTest {
         writer.write(p);
         writer.closeWriter();
 
-        JsonReader reader = new JsonReader("./data/testWriterNoCashEmptyStocks.json");
+        JsonReader reader = new JsonReader("./data/testNoCashEmptyStocks.json");
         try {
             p = reader.read();
         } catch (IOException e) {
@@ -36,8 +36,10 @@ public class JsonWriterTest {
 
     @Test
     void testWriterWithCashAndStocks() {
-        Portfolio p = new Portfolio(0);
-        JsonWriter writer = new JsonWriter("./data/testWriterWithCashAndStocks.json");
+        Portfolio p = new Portfolio(1000);
+        p.addCompanyToStocks("Apple", "AAPL", 150, 2100, 1);
+        p.addCompanyToStocks("Microsoft", "MSFT", 252.32, 1937, 2);
+        JsonWriter writer = new JsonWriter("./data/testCashAndStocks.json");
         try {
             writer.openWriter();
         } catch (FileNotFoundException e) {
@@ -46,7 +48,7 @@ public class JsonWriterTest {
         writer.write(p);
         writer.closeWriter();
 
-        JsonReader reader = new JsonReader("./data/testWriterWithCashAndStocks.json");
+        JsonReader reader = new JsonReader("./data/testCashAndStocks.json");
         try {
             p = reader.read();
         } catch (IOException e) {

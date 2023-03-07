@@ -5,6 +5,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 // Represents a reader that reads a portfolio from json data stored in a file
 // This code is adapted from that found in the JsonSterilizationDemo file
@@ -13,7 +17,7 @@ public class JsonReader {
     private String source;
 
     // EFFECTS:
-    public JsonReader (String source) {
+    public JsonReader(String source) {
         this.source = source;
     }
 
@@ -28,6 +32,10 @@ public class JsonReader {
     // EFFECTS: reads a source file and returns it
     private String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
+
+        try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s));
+        }
 
         return contentBuilder.toString();
     }
@@ -46,7 +54,7 @@ public class JsonReader {
         JSONArray stocks = object.getJSONArray("Stocks");
         for (Object company : stocks) {
             JSONObject nextCompany = (JSONObject) company;
-            addCompany(p,nextCompany);
+            addCompany(p, nextCompany);
         }
     }
 
@@ -54,8 +62,11 @@ public class JsonReader {
     // EFFECTS: parse company name and shares from JSON object and add it to the given portfolio
     private void addCompany(Portfolio p, JSONObject object) {
         String name = object.getString("Name");
+        String ticker = object.getString("Ticker");
+        double sharePrice = object.getDouble("Share Price");
+        double marketCap = object.getDouble("Market Cap");
         int sharesHeld = object.getInt("Shares Held");
-        p.purchaseShares(name, sharesHeld);
+        p.addCompanyToStocks(name, ticker, sharePrice, marketCap, sharesHeld);
     }
 
 

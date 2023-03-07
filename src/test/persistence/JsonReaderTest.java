@@ -11,7 +11,7 @@ public class JsonReaderTest {
 
     @Test
     void testReaderNoCashEmptyStocks() {
-        JsonReader reader = new JsonReader("./data/testReaderNoCashEmptyStocks.json");
+        JsonReader reader = new JsonReader("./data/testNoCashEmptyStocks.json");
         try {
             Portfolio p = reader.read();
             assertEquals(0, p.getCashBalance());
@@ -23,7 +23,7 @@ public class JsonReaderTest {
 
     @Test
     void testReaderCashAndStocks() {
-        JsonReader reader = new JsonReader("./data/testReaderCashAndStocks.json");
+        JsonReader reader = new JsonReader("./data/testCashAndStocks.json");
         try {
             Portfolio p = reader.read();
             assertEquals(1000, p.getCashBalance());

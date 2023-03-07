@@ -6,6 +6,8 @@ import model.Portfolio;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 import static model.ListedCompanies.findInListedCompanies;
@@ -16,7 +18,7 @@ import static model.ListedCompanies.findInListedCompanies;
 // Runs the Portfolio Manager app
 public class PortfolioApp {
 
-    private static final String PATH = "./data/workroom.json";
+    private static final String PATH = "./data/portfolio.json";
     private Portfolio yourPortfolio;
     private Scanner userInput;
     private JsonWriter writer;
@@ -74,34 +76,24 @@ public class PortfolioApp {
     // EFFECTS: process user input from the main menu
     //             inputting 7 exits the app (part of the runPortfolio method)
     private void processUserInput(String userInput) {
-        switch (userInput) {
-            case "1":
-                doCashDeposit();
-                break;
-            case "2":
-                doCashWithdrawal();
-                break;
-            case "3":
-                purchaseStocksMenu();
-                break;
-            case "4":
-                sellStocksMenu();
-                break;
-            case "5":
-                displayCurrentHoldings();
-                break;
-            case "6":
-                displayListedCompanies();
-                break;
-            case "7":
-                savePortfolio();
-                break;
-            case "8":
-                loadPortfolio();
-                break;
-            default:
-                System.out.println("Invalid selection! Please try again:");
-                break;
+        if (userInput.equals("1")) {
+            doCashDeposit();
+        } else if (userInput.equals("2")) {
+            doCashWithdrawal();
+        } else if (userInput.equals("3")) {
+            purchaseStocksMenu();
+        } else if (userInput.equals("4")) {
+            sellStocksMenu();
+        } else if (userInput.equals("5")) {
+            displayCurrentHoldings();
+        } else if (userInput.equals("6")) {
+            displayListedCompanies();
+        } else if (userInput.equals("7")) {
+            savePortfolio();
+        } else if (userInput.equals("8")) {
+            loadPortfolio();
+        } else {
+            System.out.println("Invalid selection! Please try again:");
         }
     }
 
@@ -308,14 +300,22 @@ public class PortfolioApp {
     }
 
     private void savePortfolio() {
-        writer.open();
+        try {
+            writer.openWriter();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         writer.write(yourPortfolio);
-        writer.close();
+        writer.closeWriter();
         System.out.println("Your portfolio has been saved to " + PATH);
     }
 
     private void loadPortfolio() {
-        yourPortfolio = reader.read();
+        try {
+            yourPortfolio = reader.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Your portfolio has been loaded from " + PATH);
     }
 }

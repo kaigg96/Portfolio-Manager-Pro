@@ -105,6 +105,10 @@ public class Portfolio {
         return this.stocks;
     }
 
+    public void addCompanyToStocks(String name, String ticker, double sharePrice, double marketCap, int sharesHeld) {
+        stocks.add(new Company(name, ticker, sharePrice, marketCap, sharesHeld));
+    }
+
     // EFFECTS: Create a JSON object for the portfolio
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
