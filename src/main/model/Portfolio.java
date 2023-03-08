@@ -93,11 +93,7 @@ public class Portfolio {
         for (int i = 0; i < stocks.size(); i++) {
             Company c = stocks.get(i);
             if ((c.getName().equals(nameOrTicker)) || (c.getTicker().equals(nameOrTicker))) {
-                try {
-                    addToBalance(c.getSharePrice() * shareNumber);
-                } catch (NegativeAmountException e) {
-                    throw new RuntimeException(e);
-                }
+                addToBalance(c.getSharePrice() * shareNumber);
                 if (c.getSharesHeld() > shareNumber) {
                     c.setSharesHeld(c.getSharesHeld() - shareNumber);
                 } else {
