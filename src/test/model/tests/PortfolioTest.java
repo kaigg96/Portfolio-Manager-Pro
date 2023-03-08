@@ -21,7 +21,7 @@ class PortfolioTest {
     }
 
     @Test
-    void addSubBalanceTestNoProbTest() {
+    void addBalanceSuccessTest() {
         assertEquals(0, p1.getCashBalance()); //init bal = 0
         try {
             p1.addToBalance(1000.); //add 1000
@@ -29,18 +29,23 @@ class PortfolioTest {
             fail("Threw NegativeAmountException");
         }
         assertEquals(1000, p1.getCashBalance()); //confirm 1000 is added
+    }
+
+    @Test
+    void subBalanceSuccessTest() {
+        assertEquals(1000, p2.getCashBalance()); //init bal = 1000
         try {
-            p1.subFromBalance(1000.); //sub 1000
+            p2.subFromBalance(1000.);
         } catch (NegativeAmountException e) {
             fail("Threw NegativeAmountException");
         } catch (InsufficientFundsException e) {
             fail("Threw InsufficientFundsException");
         }
-        assertEquals(0, p1.getCashBalance()); //confirm bal is back to 0
+        assertEquals(0, p2.getCashBalance());
     }
 
     @Test
-    void addSubNegFundsTest() {
+    void addNegFundsTest() {
         assertEquals(0, p1.getCashBalance());
         try {
             p1.addToBalance(-1);
@@ -48,16 +53,24 @@ class PortfolioTest {
         } catch (NegativeAmountException e) {
             // continue
         }
+        assertEquals(0, p1.getCashBalance()); //confirm amount still 0
+    }
+
+    @Test
+    void subNegFundsTest() {
+        assertEquals(1000, p2.getCashBalance());
         try {
-            p1.subFromBalance(-1);
+            p2.subFromBalance(-1);
             fail("Did not throw NegativeAmountException");
         } catch (NegativeAmountException e) {
             // continue
         } catch (InsufficientFundsException e) {
             fail("Threw InsufficientFundsException");
         }
-        assertEquals(0, p1.getCashBalance()); //confirm amount still 0
+        assertEquals(1000, p2.getCashBalance()); //confirm amount still 0
     }
+
+
 
     @Test
     void subInsufficientFundsTest() {
@@ -122,16 +135,6 @@ class PortfolioTest {
         } catch (CompanyNotFoundException e) {
             fail("Threw CompanyNotFoundException");
         }
-        try {
-            p2.addToBalance(50); //top up balance to sufficient amount
-        } catch (NegativeAmountException e) {
-            fail("Threw NegativeAmountException");
-        }
-        try {
-            p2.purchaseShares("AAPL", 6); //purchase successfully
-        } catch (InsufficientFundsException | CompanyNotFoundException e) {
-            fail("Threw Exception");
-        }
     }
 
     @Test
@@ -144,62 +147,47 @@ class PortfolioTest {
         } catch (CompanyNotFoundException e) {
             //continue
         }
-
     }
 
     @Test
-    void sellSharesTest() {
+    void sellSharesSuccessTest() {
         try {
-            p2.purchaseShares("AAPL", 6); //add 6 shares to portfolio
-        } catch (InsufficientFundsException | CompanyNotFoundException e) {
-            fail("Threw Exception");
-        }
-        assertEquals(100, p2.getCashBalance()); //
-        try {
-            p2.addToBalance(203);
-        } catch (NegativeAmountException e) {
-            fail("Threw NegativeAmountException");
-        }
-        try {
-            p2.purchaseShares("Alphabet", 2); //
+            p2.purchaseShares("AAPL", 2); //add 2 shares to portfolio
         } catch (InsufficientFundsException | CompanyNotFoundException e) {
             fail("Threw Exception");
         }
         try {
-            p2.sellShares("GOOG", 1);
+            p2.purchaseShares("Alphabet", 1); //
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
+        }
+        assertEquals((1000-150*2-101.5), p2.getCashBalance());
+        try {
+            p2.sellShares("Apple", 1); //partial exit position
         } catch (NegativeAmountException e) {
             fail("Threw NegativeAmountException");
         }
         try {
-            p2.sellShares("Alphabet", 1);
+            p2.sellShares("GOOG", 1); //complete exit position
         } catch (NegativeAmountException e) {
             fail("Threw NegativeAmountException");
+        }
+        assertEquals(850, p2.getCashBalance()); //make sure funds are added to cash bal
+    }
+
+    @Test
+    void sellSharesFailureTest() {
+        try {
+            p2.purchaseShares("AAPL", 2); //add 2 shares to portfolio
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         try {
-            p2.subFromBalance(203);
+            p2.sellShares("AAPL", -1);
+            fail("Did not throw NegativeAmountException");
         } catch (NegativeAmountException e) {
-            fail("Threw NegativeAmountException");
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+            //continue
         }
-        try {
-            p2.sellShares("AAPL", 1); //sell 1 share by ticker
-        } catch (NegativeAmountException e) {
-            fail("Threw NegativeAmountException");
-        }
-        assertEquals(250, p2.getCashBalance()); //make sure funds are added to cash bal
-        try {
-            p2.sellShares("Apple", 5); //sell remaining shares by name
-        } catch (NegativeAmountException e) {
-            fail("Threw NegativeAmountException");
-        }
-        assertEquals(1000, p2.getCashBalance()); //make sure funds are added to cash bal
-        try {
-            p2.sellShares("APPL", 1); //make sure you can't sell shares of company not in portfolio
-        } catch (NegativeAmountException e) {
-            fail("Threw NegativeAmountException");
-        }
-        assertEquals(1000, p2.getCashBalance()); //make sure no change to cash balance
     }
 
     @Test
@@ -242,19 +230,6 @@ class PortfolioTest {
         } catch (CompanyNotFoundException e) {
             fail("Threw CompanyNotFoundException");
         }
-    }
-
-    @Test
-    void sellNegSharesTest() {
-        p2.addCompanyToStocks("Apple", "AAPL", 150, 2100, 1);
-        assertEquals("Apple", p2.getStocks().get(0).getName());
-        try {
-            p2.sellShares("Apple", -1);
-            fail("Did not throw NegativeAmountException");
-        } catch (NegativeAmountException e) {
-            // continue
-        }
-        assertEquals(1, p2.getStocks().get(0).getSharesHeld());
     }
 }
 

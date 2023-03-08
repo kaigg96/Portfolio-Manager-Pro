@@ -86,7 +86,9 @@ public class Portfolio {
     // Modifies: this
     // Effects: remove given number of shares of the stated company from the portfolio, add cash from sale to
     //          cash balance
-    public void sellShares(String nameOrTicker, int shareNumber) throws NegativeAmountException {
+    //          sells all shares if called with shareNumber > sharesHeld
+    public void sellShares(String nameOrTicker, int shareNumber)
+            throws NegativeAmountException {
         if (shareNumber < 0) {
             throw new NegativeAmountException("Can't sell a negative number of shares");
         }
