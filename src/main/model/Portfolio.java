@@ -95,6 +95,9 @@ public class Portfolio {
         for (int i = 0; i < stocks.size(); i++) {
             Company c = stocks.get(i);
             if ((c.getName().equals(nameOrTicker)) || (c.getTicker().equals(nameOrTicker))) {
+                if (c.getSharesHeld() < shareNumber) {
+                    throw new NegativeAmountException("Can't sell more shares than currently held");
+                }
                 addToBalance(c.getSharePrice() * shareNumber);
                 if (c.getSharesHeld() > shareNumber) {
                     c.setSharesHeld(c.getSharesHeld() - shareNumber);

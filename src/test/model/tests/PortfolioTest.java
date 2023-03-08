@@ -188,6 +188,12 @@ class PortfolioTest {
         } catch (NegativeAmountException e) {
             //continue
         }
+        try {
+            p2.sellShares("AAPL", 3);
+            fail("Did not throw NegativeAmountException");
+        } catch (NegativeAmountException e) {
+            //continue
+        }
     }
 
     @Test

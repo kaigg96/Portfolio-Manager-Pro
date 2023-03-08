@@ -210,7 +210,6 @@ public class PortfolioApp {
         System.out.println("Please enter the number of shares you'd like to purchase:");
         int shareNum = userInput.nextInt();
 
-        ListedCompanies c = null;
         try {
             findInListedCompanies(companyID);
         } catch (CompanyNotFoundException e) {
@@ -222,9 +221,8 @@ public class PortfolioApp {
         } catch (InsufficientFundsException e) {
             System.out.println("Insufficient balance!");
             purchaseStocksMenu();
-        } catch (CompanyNotFoundException e) {
-            System.out.println("Company not found!");
-            purchaseStocksMenu();
+        } catch (CompanyNotFoundException e) { //should never happen since we just checked for it above
+            throw new RuntimeException();
         }
         System.out.println("Shares successfully purchased!");
     }
@@ -277,7 +275,7 @@ public class PortfolioApp {
             try {
                 yourPortfolio.sellShares(companyID, shareNum);
             } catch (NegativeAmountException e) {
-                System.out.println("You cannot sell more shares than you currently hold!");
+                System.out.println("You cannot sell that many shares!");
                 sellStocksMenu();
             }
         } else {
