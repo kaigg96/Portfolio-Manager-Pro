@@ -3,6 +3,9 @@ package ui;
 import model.Company;
 import model.ListedCompanies;
 import model.Portfolio;
+import model.exceptions.CompanyNotFoundException;
+import model.exceptions.InsufficientFundsException;
+import model.exceptions.NegativeAmountException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -97,12 +100,12 @@ public class PortfolioApp {
         System.out.println("Please enter the amount of cash you would like to deposit:");
         double amount = userInput.nextDouble();
 
-        if (amount > 0) {
+        try {
             yourPortfolio.addToBalance(amount);
-            System.out.println("Deposit successful! Your new balance is: " + yourPortfolio.getCashBalance());
-        } else {
+        } catch (NegativeAmountException e) {
             negativeDepositEntry();
         }
+        System.out.println("Deposit successful! Your new balance is: " + yourPortfolio.getCashBalance());
     }
 
     // MODIFIES: this
@@ -129,14 +132,14 @@ public class PortfolioApp {
         System.out.println("Please enter the amount of cash you would like to withdraw:");
         double amount = userInput.nextDouble();
 
-        if (amount > yourPortfolio.getCashBalance()) {
-            insufficientFundsEntry();
-        } else if (amount <= 0) {
-            negativeWithdrawalEntry();
-        } else {
+        try {
             yourPortfolio.subFromBalance(amount);
-            System.out.println("Withdrawal successful! Your new balance is: " + yourPortfolio.getCashBalance());
+        } catch (NegativeAmountException e) {
+            negativeWithdrawalEntry();
+        } catch (InsufficientFundsException e) {
+            insufficientFundsEntry();
         }
+        System.out.println("Withdrawal successful! Your new balance is: " + yourPortfolio.getCashBalance());
     }
 
     // MODIFIES: this
@@ -207,19 +210,20 @@ public class PortfolioApp {
         System.out.println("Please enter the number of shares you'd like to purchase:");
         int shareNum = userInput.nextInt();
 
-        ListedCompanies c = findInListedCompanies(companyID);
-        if (c != null) {
-            if (yourPortfolio.getCashBalance() >= shareNum * c.getSharePrice()) {
-                yourPortfolio.purchaseShares(companyID, shareNum);
-                System.out.println("Shares successfully purchased!");
-            } else {
-                System.out.println("Insufficient balance!");
-                purchaseStocksMenu();
-            }
-        } else {
+        ListedCompanies c = null;
+        try {
+            findInListedCompanies(companyID);
+        } catch (CompanyNotFoundException e) {
             System.out.println("Company not found!");
             purchaseStocksMenu();
         }
+        try {
+            yourPortfolio.purchaseShares(companyID, shareNum);
+        } catch (InsufficientFundsException e) {
+            System.out.println("Insufficient balance!");
+            purchaseStocksMenu();
+        }
+        System.out.println("Shares successfully purchased!");
     }
 
     // EFFECTS: displays all ListedCompanies

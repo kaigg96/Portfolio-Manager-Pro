@@ -1,8 +1,6 @@
 package model;
 
-import model.Company;
-
-import java.util.ArrayList;
+import model.exceptions.CompanyNotFoundException;
 
 // An enumeration of all the listed companies, with their name, ticker, share price and market cap
 public enum ListedCompanies {
@@ -43,13 +41,13 @@ public enum ListedCompanies {
 
     // EFFECTS: return the ListedCompanies object matching the given name or ticker
     //          if none match, returns null
-    public static ListedCompanies findInListedCompanies(String nameOrTicker) {
+    public static ListedCompanies findInListedCompanies(String nameOrTicker) throws CompanyNotFoundException {
         for (ListedCompanies c : ListedCompanies.values()) {
             if (c.getName().equals(nameOrTicker) || c.getTicker().equals(nameOrTicker)) {
                 return c;
             }
         }
-        return null;
+        throw new CompanyNotFoundException("Company not found");
     }
 
     public String getName() {

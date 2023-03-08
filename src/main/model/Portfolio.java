@@ -1,5 +1,8 @@
 package model;
 
+import model.exceptions.CompanyNotFoundException;
+import model.exceptions.InsufficientFundsException;
+import model.exceptions.NegativeAmountException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,53 +22,68 @@ public class Portfolio {
         stocks = new ArrayList<>();
     }
 
-    // Requires: amount >= 0
     // Modifies: this
     // Effects: Adds the given amount of cash to the portfolio's cash balance
-    public void addToBalance(double amount) {
-        this.cashBalance += amount;
+    public void addToBalance(double amount) throws NegativeAmountException {
+        if (amount >= 0) {
+            this.cashBalance += amount;
+        } else {
+            throw new NegativeAmountException("Cannot add a negative amount to balance.");
+        }
     }
 
-    // Requires: cashBalance >= amount >= 0
     // Modifies: this
     // Effects: subtract amount from cashBalance
-    public void subFromBalance(double amount) {
-        this.cashBalance -= amount;
+    public void subFromBalance(double amount) throws NegativeAmountException, InsufficientFundsException {
+        if (amount < 0) {
+            throw new NegativeAmountException("Cannot subtract a negative amount to balance.");
+        } else if (this.cashBalance < amount) {
+            throw new InsufficientFundsException("Insufficient funds to subtract amount from balance");
+        } else {
+            this.cashBalance -= amount;
+        }
     }
 
-    // Requires: cashBalance >= shareNumber * c.getSharePrice()
-    //           c is a member of ListedCompanies
     // Modifies: this
     // Effects: subtract shareNumber * sharePrice from cashBalance
     //          add given number of shares of the stated company to the portfolio
     //            if shares are already held, add to sharesHeld
     //            else add holding to portfolio
-    public void purchaseShares(String nameOrTicker, int shareNumber) {
-        ListedCompanies c = findInListedCompanies(nameOrTicker);
-        cashBalance -= shareNumber * c.getSharePrice();
-        if (findIndexOfCompanyInStocks(nameOrTicker) != null) {
-            Integer i = findIndexOfCompanyInStocks(nameOrTicker);
-            stocks.get(i).setSharesHeld(stocks.get(i).getSharesHeld() + shareNumber);
+    public void purchaseShares(String nameOrTicker, int shareNumber) throws InsufficientFundsException {
+        ListedCompanies c = null;
+        try {
+            c = findInListedCompanies(nameOrTicker);
+        } catch (CompanyNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        if (cashBalance < (shareNumber * c.getSharePrice())) {
+            throw new InsufficientFundsException("Insufficient funds to purchase that many shares");
         } else {
-            stocks.add(new Company(
-                    c.getName(),
-                    c.getTicker(),
-                    c.getSharePrice(),
-                    c.getMktcap(),
-                    shareNumber));
+            try {
+                Integer i = findIndexOfCompanyInStocks(nameOrTicker);
+                stocks.get(i).setSharesHeld(stocks.get(i).getSharesHeld() + shareNumber);
+            } catch (CompanyNotFoundException e) {
+                cashBalance -= shareNumber * c.getSharePrice();
+                stocks.add(new Company(
+                        c.getName(),
+                        c.getTicker(),
+                        c.getSharePrice(),
+                        c.getMktcap(),
+                        shareNumber));
+            }
         }
     }
 
     // EFFECTS: return the index of the Company in stocks matching the given name or ticker
     //          if none match, returns null
-    public Integer findIndexOfCompanyInStocks(String nameOrTicker) {
+    public Integer findIndexOfCompanyInStocks(String nameOrTicker) throws CompanyNotFoundException {
         for (int i = 0; i < stocks.size(); i++) {
             Company company = stocks.get(i);
             if (company.getName().equals(nameOrTicker) || company.getTicker().equals(nameOrTicker)) {
                 return i;
             }
         }
-        return null;
+        throw new CompanyNotFoundException("Company not found in stocks");
     }
 
     // Requires: given nameOrTicker corresponds to a company that is currently in the portfolio
@@ -76,7 +94,11 @@ public class Portfolio {
         for (int i = 0; i < stocks.size(); i++) {
             Company c = stocks.get(i);
             if ((c.getName().equals(nameOrTicker)) || (c.getTicker().equals(nameOrTicker))) {
-                addToBalance(c.getSharePrice() * shareNumber);
+                try {
+                    addToBalance(c.getSharePrice() * shareNumber);
+                } catch (NegativeAmountException e) {
+                    throw new RuntimeException(e);
+                }
                 if (c.getSharesHeld() > shareNumber) {
                     c.setSharesHeld(c.getSharesHeld() - shareNumber);
                 } else {
