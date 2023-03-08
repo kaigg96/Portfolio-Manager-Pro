@@ -73,26 +73,26 @@ class PortfolioTest {
     }
 
     @Test
-    void purchaseSharesTest() {
+    void purchaseSharesSuccessTest() {
         try {
             p2.purchaseShares("AAPL", 1); //Buy a share using ticker
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         assertEquals("Apple", p2.getStocks().get(0).getName()); //confirm share is added to stocks by checking name
         assertEquals(1, p2.getStocks().get(0).getSharesHeld()); //confirm one share was bought
 
         try {
             p2.purchaseShares("Microsoft", 1); //Buy a share using name
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         assertEquals("MSFT", p2.getStocks().get(1).getTicker()); //confirm share is added to stocks by checking ticker
 
         try {
             p2.purchaseShares("AAPL", 1); //purchase another share
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         assertEquals("Apple", p2.getStocks().get(0).getName()); //confirm company is still at same index
         assertEquals(2, p2.getStocks().get(0).getSharesHeld()); //confirm two shares are owned now
@@ -105,18 +105,22 @@ class PortfolioTest {
             fail("Did not throw InsufficientFundsException");
         } catch (InsufficientFundsException e) {
             // continue
+        } catch (CompanyNotFoundException e) {
+            fail("Threw CompanyNotFoundException");
         }
         assertEquals(0, p2.getStocks().size());
         try {
             p2.purchaseShares("AAPL", 1); //buy one share so the company is now in the array
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         try {
             p2.purchaseShares("AAPL", 6); //fail to buy shares of company already in stocks
             fail("Did not throw InsufficientFundsException");
         } catch (InsufficientFundsException e) {
             // continue
+        } catch (CompanyNotFoundException e) {
+            fail("Threw CompanyNotFoundException");
         }
         try {
             p2.addToBalance(50); //top up balance to sufficient amount
@@ -125,17 +129,30 @@ class PortfolioTest {
         }
         try {
             p2.purchaseShares("AAPL", 6); //purchase successfully
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
+        }
+    }
+
+    @Test
+    void purchaseSharesCompanyNotFoundTest() {
+        try {
+            p2.purchaseShares("LOL", 1);
+            fail("Did not throw CompanyNotFoundException");
         } catch (InsufficientFundsException e) {
             fail("Threw InsufficientFundsException");
+        } catch (CompanyNotFoundException e) {
+            //continue
         }
+
     }
 
     @Test
     void sellSharesTest() {
         try {
             p2.purchaseShares("AAPL", 6); //add 6 shares to portfolio
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         assertEquals(100, p2.getCashBalance()); //
         try {
@@ -145,11 +162,19 @@ class PortfolioTest {
         }
         try {
             p2.purchaseShares("Alphabet", 2); //
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
-        p2.sellShares("GOOG", 1);
-        p2.sellShares("Alphabet", 1);
+        try {
+            p2.sellShares("GOOG", 1);
+        } catch (NegativeAmountException e) {
+            fail("Threw NegativeAmountException");
+        }
+        try {
+            p2.sellShares("Alphabet", 1);
+        } catch (NegativeAmountException e) {
+            fail("Threw NegativeAmountException");
+        }
         try {
             p2.subFromBalance(203);
         } catch (NegativeAmountException e) {
@@ -157,27 +182,37 @@ class PortfolioTest {
         } catch (InsufficientFundsException e) {
             fail("Threw InsufficientFundsException");
         }
-        p2.sellShares("AAPL", 1); //sell 1 share by ticker
+        try {
+            p2.sellShares("AAPL", 1); //sell 1 share by ticker
+        } catch (NegativeAmountException e) {
+            fail("Threw NegativeAmountException");
+        }
         assertEquals(250, p2.getCashBalance()); //make sure funds are added to cash bal
-        p2.sellShares("Apple", 5); //sell remaining shares by name
+        try {
+            p2.sellShares("Apple", 5); //sell remaining shares by name
+        } catch (NegativeAmountException e) {
+            fail("Threw NegativeAmountException");
+        }
         assertEquals(1000, p2.getCashBalance()); //make sure funds are added to cash bal
-        p2.sellShares("APPL", 1); //make sure you can't sell shares of company not in portfolio
+        try {
+            p2.sellShares("APPL", 1); //make sure you can't sell shares of company not in portfolio
+        } catch (NegativeAmountException e) {
+            fail("Threw NegativeAmountException");
+        }
         assertEquals(1000, p2.getCashBalance()); //make sure no change to cash balance
-
-
     }
 
     @Test
     void findCompanyInStocksTest () {
         try {
             p2.purchaseShares("AAPL", 1);
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         try {
             p2.purchaseShares("Microsoft", 2);
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         assertNull(p2.findCompanyInStocks("BRK"));
         assertEquals(p2.getStocks().get(0), p2.findCompanyInStocks("Apple"));
@@ -188,13 +223,13 @@ class PortfolioTest {
     void findIndexOfCompanyInStocksTest () {
         try {
             p2.purchaseShares("Home Depot", 1);
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         try {
             p2.purchaseShares("MSFT", 2);
-        } catch (InsufficientFundsException e) {
-            fail("Threw InsufficientFundsException");
+        } catch (InsufficientFundsException | CompanyNotFoundException e) {
+            fail("Threw Exception");
         }
         assertNull(p2.findCompanyInStocks("BRK"));
         try {
@@ -207,6 +242,19 @@ class PortfolioTest {
         } catch (CompanyNotFoundException e) {
             fail("Threw CompanyNotFoundException");
         }
+    }
+
+    @Test
+    void sellNegSharesTest() {
+        p2.addCompanyToStocks("Apple", "AAPL", 150, 2100, 1);
+        assertEquals("Apple", p2.getStocks().get(0).getName());
+        try {
+            p2.sellShares("Apple", -1);
+            fail("Did not throw NegativeAmountException");
+        } catch (NegativeAmountException e) {
+            // continue
+        }
+        assertEquals(1, p2.getStocks().get(0).getSharesHeld());
     }
 }
 

@@ -49,13 +49,9 @@ public class Portfolio {
     //          add given number of shares of the stated company to the portfolio
     //            if shares are already held, add to sharesHeld
     //            else add holding to portfolio
-    public void purchaseShares(String nameOrTicker, int shareNumber) throws InsufficientFundsException {
-        ListedCompanies c = null;
-        try {
-            c = findInListedCompanies(nameOrTicker);
-        } catch (CompanyNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public void purchaseShares(String nameOrTicker, int shareNumber)
+            throws InsufficientFundsException, CompanyNotFoundException {
+        ListedCompanies c = findInListedCompanies(nameOrTicker);
         if (cashBalance < (shareNumber * c.getSharePrice())) {
             throw new InsufficientFundsException("Insufficient funds to purchase that many shares");
         } else {
@@ -90,7 +86,10 @@ public class Portfolio {
     // Modifies: this
     // Effects: remove given number of shares of the stated company from the portfolio, add cash from sale to
     //          cash balance
-    public void sellShares(String nameOrTicker, int shareNumber) {
+    public void sellShares(String nameOrTicker, int shareNumber) throws NegativeAmountException {
+        if (shareNumber < 0) {
+            throw new NegativeAmountException("Can't sell a negative number of shares");
+        }
         for (int i = 0; i < stocks.size(); i++) {
             Company c = stocks.get(i);
             if ((c.getName().equals(nameOrTicker)) || (c.getTicker().equals(nameOrTicker))) {
