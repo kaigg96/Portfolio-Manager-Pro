@@ -39,17 +39,6 @@ public enum ListedCompanies {
         this.mktcap = mktcap;
     }
 
-    // EFFECTS: return the ListedCompanies object matching the given name or ticker
-    //          if none match, returns null
-    public static ListedCompanies findInListedCompanies(String nameOrTicker) throws CompanyNotFoundException {
-        for (ListedCompanies c : ListedCompanies.values()) {
-            if (c.getName().equals(nameOrTicker) || c.getTicker().equals(nameOrTicker)) {
-                return c;
-            }
-        }
-        throw new CompanyNotFoundException("Company not found");
-    }
-
     public String getName() {
         return this.name;
     }
@@ -66,4 +55,14 @@ public enum ListedCompanies {
         return this.mktcap;
     }
 
+    // EFFECTS: return the ListedCompanies object matching the given name or ticker
+    //          throws CompanyNotFoundException if nameOrTicker is not in ListedCompanies
+    public static ListedCompanies findInListedCompanies(String nameOrTicker) throws CompanyNotFoundException {
+        for (ListedCompanies c : ListedCompanies.values()) {
+            if (c.getName().equals(nameOrTicker) || c.getTicker().equals(nameOrTicker)) {
+                return c;
+            }
+        }
+        throw new CompanyNotFoundException("Company not found");
+    }
 }

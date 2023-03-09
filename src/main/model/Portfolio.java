@@ -22,8 +22,17 @@ public class Portfolio {
         stocks = new ArrayList<>();
     }
 
+    public double getCashBalance() {
+        return this.cashBalance;
+    }
+
+    public ArrayList<Company> getStocks() {
+        return this.stocks;
+    }
+
     // Modifies: this
     // Effects: Adds the given amount of cash to the portfolio's cash balance
+    //          throws NegativeAmountException if amount < 0
     public void addToBalance(double amount) throws NegativeAmountException {
         if (amount >= 0) {
             this.cashBalance += amount;
@@ -34,6 +43,8 @@ public class Portfolio {
 
     // Modifies: this
     // Effects: subtract amount from cashBalance
+    //          throws NegativeAmountException is amount < 0
+    //          throws InsufficientFundsException is amount > cashBalance
     public void subFromBalance(double amount) throws NegativeAmountException, InsufficientFundsException {
         if (amount < 0) {
             throw new NegativeAmountException("Cannot subtract a negative amount to balance.");
@@ -49,6 +60,8 @@ public class Portfolio {
     //          add given number of shares of the stated company to the portfolio
     //            if shares are already held, add to sharesHeld
     //            else add holding to portfolio
+    //          throws InsufficientFundsException is cashBalance < shareNumber * sharePrice
+    //          throws CompanyNotFoundException if nameOrTicker does not belong to a ListedCompany
     public void purchaseShares(String nameOrTicker, int shareNumber)
             throws InsufficientFundsException, CompanyNotFoundException {
         ListedCompanies c = findInListedCompanies(nameOrTicker);
@@ -72,6 +85,7 @@ public class Portfolio {
 
     // EFFECTS: return the index of the Company in stocks matching the given name or ticker
     //          if none match, returns null
+    //          throws CompanyNotFoundException if nameOrTicker does not belong to a ListedCompany
     public Integer findIndexOfCompanyInStocks(String nameOrTicker) throws CompanyNotFoundException {
         for (int i = 0; i < stocks.size(); i++) {
             Company company = stocks.get(i);
@@ -87,6 +101,7 @@ public class Portfolio {
     // Effects: remove given number of shares of the stated company from the portfolio, add cash from sale to
     //          cash balance
     //          sells all shares if called with shareNumber > sharesHeld
+    //          throws NegativeAmountException if shareNumber < 0
     public void sellShares(String nameOrTicker, int shareNumber)
             throws NegativeAmountException {
         if (shareNumber < 0) {
@@ -119,16 +134,9 @@ public class Portfolio {
         return null;
     }
 
-    public double getCashBalance() {
-        return this.cashBalance;
-    }
-
-    public ArrayList<Company> getStocks() {
-        return this.stocks;
-    }
-
     // MODIFIES: this
     // EFFECTS: constructs a company with the given arguments and adds it to stocks
+    //          does not subtract from cashBalance to purchase
     public void addCompanyToStocks(String name, String ticker, double sharePrice,
                                    double marketCap, int sharesHeld) {
         stocks.add(new Company(name, ticker, sharePrice, marketCap, sharesHeld));
