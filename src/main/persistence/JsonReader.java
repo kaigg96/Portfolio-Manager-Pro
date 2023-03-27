@@ -68,6 +68,4 @@ public class JsonReader {
         p.addCompanyToStocks(name, ticker, sharePrice, marketCap, sharesHeld);
     }
 
-
-
 }

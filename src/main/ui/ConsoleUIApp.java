@@ -19,7 +19,7 @@ import static model.ListedCompanies.findInListedCompanies;
 //   file (especially parts using the scanner), and JsonSterilizationDemo - WorkRoomApp class.
 
 // Runs the Portfolio Manager app
-public class PortfolioApp {
+public class ConsoleUIApp {
 
     private static final String PATH = "./data/portfolio.json";
     private Portfolio yourPortfolio;
@@ -28,7 +28,7 @@ public class PortfolioApp {
     private JsonReader reader;
 
     // EFFECTS: constructs a PortfolioApp then runs the application
-    public PortfolioApp() {
+    public ConsoleUIApp() {
         yourPortfolio = new Portfolio(0);
         userInput = new Scanner(System.in);
         writer = new JsonWriter(PATH);
