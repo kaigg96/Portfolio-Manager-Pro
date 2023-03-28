@@ -255,7 +255,6 @@ public class GraphicalUIApp extends JFrame {
 
         textAndLabelPanel.setBackground(new Color(163, 220, 239));
 
-        // create the GroupLayout constraints for the components
         setGroupLayout(textAndLabelPanel, continueButton, tickerLabel, tickerInput, shareNumberLabel, shareNumberInput);
 
         return textAndLabelPanel;
@@ -366,6 +365,7 @@ public class GraphicalUIApp extends JFrame {
         jf.pack();
     }
 
+    //EFFECTS: creates and returns cashPanel
     private JPanel createCashPanel() {
         JPanel cashPanel = new JPanel();
         JLabel cashAmount = new JLabel("Cash Balance: " + yourPortfolio.getCashBalance());
@@ -376,6 +376,7 @@ public class GraphicalUIApp extends JFrame {
         return cashPanel;
     }
 
+    //EFFECTS: creates subpanel for each Company with held shares
     private ArrayList<JPanel> generateHoldingsSubPanels() {
         ArrayList<String> tickerList = new ArrayList<>();
         for (Company c : yourPortfolio.getStocks()) {
@@ -394,7 +395,7 @@ public class GraphicalUIApp extends JFrame {
 
             JPanel subPanel = new JPanel();
             subPanel.add(logo);
-            ArrayList<String> companyInfo = listedCompanies();
+            ArrayList<String> companyInfo = portfolioHoldings();
             subPanel.add(new JLabel(companyInfo.get(i)));
 
             subPanels.add(subPanel);
@@ -403,16 +404,16 @@ public class GraphicalUIApp extends JFrame {
     }
 
     //EFFECTS: Returns a String containing yourPortfolio cashBalance and list of holdings
-    public String portfolioHoldings() {
-        String info = "Cash balance: " + yourPortfolio.getCashBalance();
+    public ArrayList<String> portfolioHoldings() {
+        ArrayList<String> companyInfo = new ArrayList<>();
         for (Company c : yourPortfolio.getStocks()) {
-            info += "\n - Name: " + c.getName()
+            companyInfo.add("\n - Name: " + c.getName()
                     + " || Ticker: " + c.getTicker()
                     + " || Shares held: " + c.getSharesHeld()
                     + " || Share price: " + c.getSharePrice()
-                    + " || Market cap: " + c.getMarketCap();
+                    + " || Market cap: " + c.getMarketCap());
         }
-        return info;
+        return companyInfo;
     }
 
     //MODIFIES: this
