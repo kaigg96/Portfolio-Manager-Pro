@@ -162,7 +162,7 @@ public class GraphicalUIApp extends JFrame {
         withdrawCashButton.addActionListener(e -> withdrawMenu());
         purchaseStocksButton.addActionListener(e -> purchaseStocksMenu());
         sellStocksButton.addActionListener(e -> sellStocksMenu());
-        viewPortfolioButton.addActionListener(e -> JOptionPane.showMessageDialog(jf, portfolioHoldings()));
+        viewPortfolioButton.addActionListener(e -> browseHoldingsMenu());
         browseCompaniesButton.addActionListener(e -> browseCompaniesMenu());
         saveButton.addActionListener(e -> savePortfolio());
         exitButton.addActionListener(e -> jf.dispose());
@@ -341,6 +341,67 @@ public class GraphicalUIApp extends JFrame {
         JOptionPane.showMessageDialog(jf, "Feature not yet implemented!");
     }
 
+    //MODIFIES: this
+    //EFFECTS: setup the browseHoldingsMenu
+    private void browseHoldingsMenu() {
+
+        JPanel holdingsPanel = new JPanel();
+        holdingsPanel.setLayout(new GridLayout(20, 1));
+
+        for (JPanel subPanel : generateHoldingsSubPanels()) {
+            holdingsPanel.add(subPanel);
+        }
+
+        JPanel displayPanel = new JPanel();
+        displayPanel.setLayout(new BoxLayout(displayPanel, BoxLayout.Y_AXIS));
+        displayPanel.add(createCashPanel(), BorderLayout.NORTH);
+        displayPanel.add(holdingsPanel, BorderLayout.CENTER);
+        displayPanel.setBackground(new Color(163, 220, 239));
+
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
+
+        jf.add(displayPanel, BorderLayout.CENTER);
+
+        jf.pack();
+    }
+
+    private JPanel createCashPanel() {
+        JPanel cashPanel = new JPanel();
+        JLabel cashAmount = new JLabel("Cash Balance: " + yourPortfolio.getCashBalance());
+        cashAmount.setFont(new Font("Serif", Font.BOLD, 16));
+
+        cashPanel.add(cashAmount);
+
+        return cashPanel;
+    }
+
+    private ArrayList<JPanel> generateHoldingsSubPanels() {
+        ArrayList<String> tickerList = new ArrayList<>();
+        for (Company c : yourPortfolio.getStocks()) {
+            tickerList.add(c.getTicker());
+        }
+
+        ArrayList<JPanel> subPanels = new ArrayList<>();
+
+        for (int i = 0; i < tickerList.size(); i++) {
+            String ticker = tickerList.get(i);
+            String imagePath = "./data/images/" + ticker + ".png";
+            ImageIcon icon = new ImageIcon(imagePath);
+            Image image = icon.getImage().getScaledInstance(35, 25, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(image);
+            JLabel logo = new JLabel(scaledIcon);
+
+            JPanel subPanel = new JPanel();
+            subPanel.add(logo);
+            ArrayList<String> companyInfo = listedCompanies();
+            subPanel.add(new JLabel(companyInfo.get(i)));
+
+            subPanels.add(subPanel);
+        }
+        return subPanels;
+    }
+
     //EFFECTS: Returns a String containing yourPortfolio cashBalance and list of holdings
     public String portfolioHoldings() {
         String info = "Cash balance: " + yourPortfolio.getCashBalance();
@@ -354,6 +415,7 @@ public class GraphicalUIApp extends JFrame {
         return info;
     }
 
+    //MODIFIES: this
     //EFFECTS: setup the browseCompaniesMenu
     private void browseCompaniesMenu() {
 
@@ -373,6 +435,7 @@ public class GraphicalUIApp extends JFrame {
         jf.pack();
     }
 
+    //EFFECTS: generate a subPanel for each company-logo pair
     private ArrayList<JPanel> generateSubPanels() {
         ArrayList<String> tickerList = new ArrayList<>();
         for (ListedCompanies c : ListedCompanies.values()) {
@@ -399,7 +462,7 @@ public class GraphicalUIApp extends JFrame {
         return subPanels;
     }
 
-    //EFFECTS: creates a string object of all ListedCompanies
+    //EFFECTS: creates a list of string objects of all ListedCompanies
     public ArrayList<String> listedCompanies() {
         ArrayList<String> info = new ArrayList<>();
         for (ListedCompanies c : ListedCompanies.values()) {
