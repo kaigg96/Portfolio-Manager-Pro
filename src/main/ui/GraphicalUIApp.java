@@ -163,7 +163,7 @@ public class GraphicalUIApp extends JFrame {
         purchaseStocksButton.addActionListener(e -> purchaseStocksMenu());
         sellStocksButton.addActionListener(e -> sellStocksMenu());
         viewPortfolioButton.addActionListener(e -> JOptionPane.showMessageDialog(jf, portfolioHoldings()));
-        browseCompaniesButton.addActionListener(e -> JOptionPane.showMessageDialog(jf, listedCompanies()));
+        browseCompaniesButton.addActionListener(e -> browseCompaniesMenu());
         saveButton.addActionListener(e -> savePortfolio());
         exitButton.addActionListener(e -> jf.dispose());
 
@@ -303,8 +303,6 @@ public class GraphicalUIApp extends JFrame {
                                 .addComponent(shareNumberLabel)
                                 .addComponent(shareNumberInput))
                         .addComponent(continueButton)
-
-
         );
     }
 
@@ -356,14 +354,59 @@ public class GraphicalUIApp extends JFrame {
         return info;
     }
 
-    //EFFECTS: creates a string object of all ListedCompanies
-    public String listedCompanies() {
-        String info = "";
+    //EFFECTS: setup the browseCompaniesMenu
+    private void browseCompaniesMenu() {
+
+        JPanel displayPanel = new JPanel();
+        displayPanel.setBackground(new Color(163, 220, 239));
+        displayPanel.setLayout(new GridLayout(20, 1));
+
+        for (JPanel subPanel : generateSubPanels()) {
+            displayPanel.add(subPanel);
+        }
+
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
+
+        jf.add(displayPanel, BorderLayout.CENTER);
+
+        jf.pack();
+    }
+
+    private ArrayList<JPanel> generateSubPanels() {
+        ArrayList<String> tickerList = new ArrayList<>();
         for (ListedCompanies c : ListedCompanies.values()) {
-            info += "\n Name: " + c.getName()
+            tickerList.add(c.getTicker());
+        }
+
+        ArrayList<JPanel> subPanels = new ArrayList<>();
+
+        for (int i = 0; i < tickerList.size(); i++) {
+            String ticker = tickerList.get(i);
+            String imagePath = "./data/images/" + ticker + ".png";
+            ImageIcon icon = new ImageIcon(imagePath);
+            Image image = icon.getImage().getScaledInstance(35, 25, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(image);
+            JLabel logo = new JLabel(scaledIcon);
+
+            JPanel subPanel = new JPanel();
+            subPanel.add(logo);
+            ArrayList<String> companyInfo = listedCompanies();
+            subPanel.add(new JLabel(companyInfo.get(i)));
+
+            subPanels.add(subPanel);
+        }
+        return subPanels;
+    }
+
+    //EFFECTS: creates a string object of all ListedCompanies
+    public ArrayList<String> listedCompanies() {
+        ArrayList<String> info = new ArrayList<>();
+        for (ListedCompanies c : ListedCompanies.values()) {
+            info.add("\n Name: " + c.getName()
                     + " || Ticker: " + c.getTicker()
                     + " || Share price: " + c.getSharePrice()
-                    + " || Market cap: " + c.getMktcap();
+                    + " || Market cap: " + c.getMktcap());
         }
         return info;
     }

@@ -10,7 +10,7 @@ public enum ListedCompanies {
     ALPHABET("Alphabet", "GOOG", 101.5, 1305),
     AMAZON("Amazon", "AMZN", 105.15, 1072),
     BERKSHIRE("Berkshire Hathaway", "BRK", 310.57, 684.8),
-    TESLA("Tesla", "TSLA", 181.41, 572.84),
+        TESLA("Tesla", "TSLA", 181.41, 572.84),
     NVIDIA("NVIDIA", "NVDA", 209.43, 521.89),
     TSM("Taiwan Semiconductor", "TSM", 94.74, 491.32),
     VISA("Visa", "V", 230.9, 485.3),
