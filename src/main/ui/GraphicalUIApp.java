@@ -14,6 +14,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 //Runs the GUIApp
 public class GraphicalUIApp extends JFrame {
@@ -27,76 +29,125 @@ public class GraphicalUIApp extends JFrame {
     JsonReader reader = new JsonReader(PATH);
     JFrame jf;
 
+    //EFFECTS: runs the openingMenu
     public GraphicalUIApp() {
+        this.jf = new JFrame();
+        jf.setSize(WIDTH, HEIGHT);
+        jf.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setLayout(new BorderLayout());
+        jf.setVisible(true);
+        jf.getContentPane().setBackground(new Color(163, 220, 239));
         openingMenu();
-
     }
 
+    //EFFECTS: create a JLabel title object
+    private JLabel createTitle() {
+
+        JLabel title = new JLabel("Portfolio Manager Pro");
+        title.setFont(new Font("Serif", Font.BOLD, 26));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+
+        return title;
+    }
+
+    //MODIFIES: this
     //EFFECTS: creates the opening menu for the GUIApp
     public void openingMenu() {
 
-        int titleWidth = 300;
-        int titleHeight = 100;
-        int buttonWidth = 400;
-        int buttonHeight = 100;
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
+        jf.add(createOpeningPanel(), BorderLayout.CENTER);
+        jf.pack();
+    }
 
-        this.jf = new JFrame();
-        jf.setSize(WIDTH, HEIGHT);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //EFFECTS: sets up the openingMenu panel
+    private JPanel createOpeningPanel() {
 
-        JLabel title = new JLabel("Portfolio Manager Pro");
+        JPanel openingPanel = new JPanel();
+        openingPanel.setLayout(new FlowLayout());
+
+        ArrayList<JButton> buttons = createOpeningButtons();
+
+        openingPanel.add(Box.createVerticalStrut(450));
+        for (JButton button : buttons) {
+            openingPanel.add(button);
+        }
+
+        openingPanel.setBackground(new Color(163, 220, 239));
+
+        return openingPanel;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: sets up the openingPanel buttons
+    //         catches IOException and displays a popup of the error.
+    private ArrayList<JButton> createOpeningButtons() {
+        ArrayList<JButton> buttons = new ArrayList<>();
+
         JButton newPortfolioButton = new JButton("New Portfolio");
         JButton loadPortfolioButton = new JButton("Load Portfolio");
 
-        //setup
-        title.setBounds(WIDTH / 2 - titleWidth / 2,10, titleWidth, titleHeight);
-        title.setFont(new Font("Serif", Font.BOLD, 26));
-        newPortfolioButton.setBounds(WIDTH / 2  - buttonWidth / 2, HEIGHT * 1 / 3 - buttonHeight / 2,
-                buttonWidth, buttonHeight);
-        loadPortfolioButton.setBounds(WIDTH / 2 - buttonWidth / 2, HEIGHT * 2 / 3 - buttonHeight / 2,
-                buttonWidth, buttonHeight);
-
-        jf.add(title);
-        jf.add(newPortfolioButton);
-        jf.add(loadPortfolioButton);
-
-        jf.setLayout(null);
-        jf.setVisible(true);
-
         newPortfolioButton.addActionListener(e -> {
-            jf.dispose();
             Portfolio portfolio = new Portfolio(0);
             mainMenu(portfolio);
         });
 
         loadPortfolioButton.addActionListener(e -> {
-            jf.dispose();
             Portfolio portfolio = new Portfolio(0);
             try {
                 portfolio = reader.read();
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(jf,
-                        "ERROR: There are no saved portfolios."
-                               + "Loading a new portfolio instead.");
+                        "ERROR: There are no saved portfolios. Loading a new portfolio instead.");
             }
             mainMenu(portfolio);
         });
+
+        newPortfolioButton.setPreferredSize(new Dimension(200, 100));
+        loadPortfolioButton.setPreferredSize(new Dimension(200, 100));
+
+        Collections.addAll(buttons, newPortfolioButton, loadPortfolioButton);
+
+        return buttons;
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets up the mainMenu
     public void mainMenu(Portfolio p) {
 
-        int titleWidth = 300;
-        int titleHeight = 100;
-        int buttonWidth = 200;
-        int buttonHeight = 75;
-        int topButtonY = HEIGHT * 1 / 4 - buttonHeight / 2;
-
-        this.jf = new JFrame();
-        jf.setSize(WIDTH, HEIGHT);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         yourPortfolio = p;
-        JLabel title = new JLabel("Portfolio Manager Pro");
+
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
+
+        jf.add(createMainPanel(), BorderLayout.CENTER);
+
+        jf.pack();
+    }
+
+    //EFFECTS: sets up the mainPanel
+    private JPanel createMainPanel() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(4, 2));
+
+        //add buttons to mainPanel
+        ArrayList<JButton> buttons = createMainButtons();
+        for (JButton button : buttons) {
+            mainPanel.add(button);
+        }
+
+        mainPanel.setBackground(new Color(163, 220, 239));
+
+        return mainPanel;
+    }
+
+    //EFFECTS: creates the mainMenuButtons
+    private ArrayList<JButton> createMainButtons() {
+
+        ArrayList<JButton> buttons = new ArrayList<>();
+
+        //create buttons
         JButton depositCashButton = new JButton("Deposit");
         JButton withdrawCashButton = new JButton("Withdraw");
         JButton purchaseStocksButton = new JButton("Purchase Stocks");
@@ -106,76 +157,42 @@ public class GraphicalUIApp extends JFrame {
         JButton saveButton = new JButton("Save Portfolio");
         JButton exitButton = new JButton("Exit");
 
-        title.setBounds(WIDTH / 2 - titleWidth / 2,10, titleWidth, titleHeight);
-        title.setFont(new Font("Serif", Font.BOLD, 26));
-        depositCashButton.setBounds(WIDTH / 4  - buttonWidth / 2, topButtonY,
-                buttonWidth, buttonHeight);
-        withdrawCashButton.setBounds(WIDTH / 4  - buttonWidth / 2, topButtonY + buttonHeight + 20,
-                buttonWidth, buttonHeight);
-        purchaseStocksButton.setBounds(WIDTH / 4  - buttonWidth / 2, topButtonY + (buttonHeight + 20) * 2,
-                buttonWidth, buttonHeight);
-        sellStocksButton.setBounds(WIDTH / 4  - buttonWidth / 2, topButtonY + (buttonHeight + 20) * 3,
-                buttonWidth, buttonHeight);
-        viewPortfolioButton.setBounds(WIDTH * 3 / 4  - buttonWidth / 2, topButtonY,
-                buttonWidth, buttonHeight);
-        browseCompaniesButton.setBounds(WIDTH * 3 / 4  - buttonWidth / 2, topButtonY + buttonHeight + 20,
-                buttonWidth, buttonHeight);
-        saveButton.setBounds(WIDTH * 3 / 4  - buttonWidth / 2, topButtonY + (buttonHeight + 20) * 2,
-                buttonWidth, buttonHeight);
-        exitButton.setBounds(WIDTH * 3 / 4  - buttonWidth / 2, topButtonY + (buttonHeight + 20) * 3,
-                buttonWidth, buttonHeight);
-
+        //add action listeners
         depositCashButton.addActionListener(e -> depositMenu());
-        withdrawCashButton.addActionListener(e -> {
-            //jf.dispose();
-            withdrawMenu();
-        });
-        purchaseStocksButton.addActionListener(e -> {
-            purchaseStocksMenu();
-            //jf.dispose();
-        });
-        sellStocksButton.addActionListener(e -> {
-            //jf.dispose();
-            sellStocksMenu();
-        });
+        withdrawCashButton.addActionListener(e -> withdrawMenu());
+        purchaseStocksButton.addActionListener(e -> purchaseStocksMenu());
+        sellStocksButton.addActionListener(e -> sellStocksMenu());
         viewPortfolioButton.addActionListener(e -> JOptionPane.showMessageDialog(jf, portfolioHoldings()));
         browseCompaniesButton.addActionListener(e -> JOptionPane.showMessageDialog(jf, listedCompanies()));
         saveButton.addActionListener(e -> savePortfolio());
         exitButton.addActionListener(e -> jf.dispose());
 
-        jf.add(title);
-        jf.add(viewPortfolioButton);
-        jf.add(depositCashButton);
-        jf.add(withdrawCashButton);
-        jf.add(purchaseStocksButton);
-        jf.add(sellStocksButton);
-        jf.add(viewPortfolioButton);
-        jf.add(browseCompaniesButton);
-        jf.add(saveButton);
-        jf.add(exitButton);
+        Collections.addAll(buttons, depositCashButton, withdrawCashButton, purchaseStocksButton, sellStocksButton,
+                viewPortfolioButton, browseCompaniesButton, saveButton, exitButton);
 
-        jf.setLayout(null);
-        jf.setVisible(true);
+        return buttons;
     }
 
     //EFFECTS: creates the menu for depositing cash
     private void depositMenu() {
 
-        int titleWidth = 300;
-        int titleHeight = 100;
-        int textFieldWidth = 200;
-        int textFieldHeight = 50;
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
 
-        this.jf = new JFrame();
-        jf.setSize(WIDTH, HEIGHT);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.add(createDepositPanel());
+        jf.pack();
+    }
 
-        JLabel title = new JLabel("Portfolio Manager Pro");
-        title.setBounds(WIDTH / 2 - titleWidth / 2,10, titleWidth, titleHeight);
-        title.setFont(new Font("Serif", Font.BOLD, 26));
+    //MODIFIES: this
+    //EFFECTS: creates the depositPanel
+    //         catches NegativeAmountException and displays a popup of the error.
+    private JPanel createDepositPanel() {
+
+        JPanel depositPanel = new JPanel();
+        depositPanel.setLayout(new FlowLayout());
 
         JTextField textField = new JTextField();
-        textField.setBounds(WIDTH / 2 - titleWidth / 2,200, textFieldWidth, textFieldHeight);
+        textField.setPreferredSize(new Dimension(100, 50));
         ActionListener textListener = e -> {
             String depositAmount = textField.getText();
             try {
@@ -189,54 +206,119 @@ public class GraphicalUIApp extends JFrame {
         };
 
         JButton continueButton = new JButton("Deposit");
-        continueButton.setBounds(WIDTH / 2 - titleWidth / 2,250, textFieldWidth, textFieldHeight);
+        continueButton.setPreferredSize(new Dimension(100, 50));
         continueButton.addActionListener(textListener);
 
+        depositPanel.add(Box.createVerticalStrut(WIDTH / 2 + 50));
+        depositPanel.add(textField);
+        depositPanel.add(continueButton);
 
-        jf.add(title);
-        jf.add(textField);
-        jf.add(continueButton);
+        depositPanel.setBackground(new Color(163, 220, 239));
 
-
-        jf.setLayout(null);
-        jf.setVisible(true);
-
+        return depositPanel;
     }
 
-    //EFFECTS: creates the menu for depositing cash
+    //EFFECTS: creates the menu for withdrawing cash
     private void withdrawMenu() {
         JOptionPane.showMessageDialog(jf, "Feature not yet implemented!");
     }
 
+    //MODIFIES: this
+    //EFFECTS: creates the purchaseStocksMenu
     private void purchaseStocksMenu() {
 
-        int titleWidth = 300;
-        int titleHeight = 100;
-        int textFieldWidth = 200;
-        int textFieldHeight = 50;
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
 
-        this.jf = new JFrame();
-        jf.setSize(WIDTH, HEIGHT);
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.add(purchasePanel(), BorderLayout.CENTER);
+        jf.pack();
+    }
 
-        JLabel title = new JLabel("Portfolio Manager Pro");
-        title.setBounds(WIDTH / 2 - titleWidth / 2,10, titleWidth, titleHeight);
-        title.setFont(new Font("Serif", Font.BOLD, 26));
+    //MODIFIES: this
+    //EFFECTS: creates the purchaseStocksPanel
+    private JPanel purchasePanel() {
+        JPanel textAndLabelPanel = new JPanel();
+        JButton continueButton = createContinueButton();
+        textAndLabelPanel.setLayout(new GroupLayout(textAndLabelPanel)); // set the layout manager to GroupLayout
 
         JLabel tickerLabel = new JLabel("Company name/ticker: ");
-        tickerLabel.setBounds(WIDTH / 2 - titleWidth / 2 - textFieldWidth + 140,175, titleWidth, titleHeight);
         tickerLabel.setFont(new Font("Serif", Font.BOLD, 16));
         JTextField tickerInput = new JTextField();
-        tickerInput.setToolTipText("Name/Ticker");
-        tickerInput.setBounds(WIDTH / 2 - titleWidth / 2 + 100,200, textFieldWidth, textFieldHeight);
+        tickerInput.setPreferredSize(new Dimension(200, 50));
 
         JLabel shareNumberLabel = new JLabel("Shares to purchase: ");
-        shareNumberLabel.setBounds(WIDTH / 2 - titleWidth / 2 - textFieldWidth + 140,225, titleWidth, titleHeight);
         shareNumberLabel.setFont(new Font("Serif", Font.BOLD, 16));
         JTextField shareNumberInput = new JTextField();
-        tickerInput.setToolTipText("Share number");
-        shareNumberInput.setBounds(WIDTH / 2 - titleWidth / 2 + 100,250, textFieldWidth, textFieldHeight);
+        shareNumberInput.setPreferredSize(new Dimension(200, 50));
 
+        addActionListenerToContinueButton(continueButton, tickerInput, shareNumberInput);
+
+        textAndLabelPanel.setBackground(new Color(163, 220, 239));
+
+        // create the GroupLayout constraints for the components
+        setGroupLayout(textAndLabelPanel, continueButton, tickerLabel, tickerInput, shareNumberLabel, shareNumberInput);
+
+        return textAndLabelPanel;
+    }
+
+    //MODIFIES: layout
+    //EFFECTS: sets up the groupLayout object
+    private void setGroupLayout(JPanel textAndLabelPanel, JButton continueButton, JLabel tickerLabel,
+                                JTextField tickerInput, JLabel shareNumberLabel, JTextField shareNumberInput) {
+        GroupLayout layout = new GroupLayout(textAndLabelPanel);
+        textAndLabelPanel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+
+        setHorizontalGroup(layout, tickerLabel, tickerInput, shareNumberLabel, shareNumberInput, continueButton);
+        setVerticalGroup(layout, tickerLabel, tickerInput, shareNumberLabel, shareNumberInput, continueButton);
+    }
+
+    //MODIFIES: layout
+    //EFFECTS: sets the HorizontalGroup of layout
+    private void setHorizontalGroup(GroupLayout layout, JLabel tickerLabel, JTextField tickerInput,
+                                    JLabel shareNumberLabel, JTextField shareNumberInput, JButton continueButton) {
+        layout.setHorizontalGroup(
+                layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(tickerLabel)
+                                .addComponent(tickerInput))
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(shareNumberLabel)
+                                .addComponent(shareNumberInput))
+                        .addComponent(continueButton)
+        );
+    }
+
+    //MODIFIES: layout
+    //EFFECTS: sets the VerticalGroup of layout
+    private void setVerticalGroup(GroupLayout layout, JLabel tickerLabel, JTextField tickerInput,
+                                  JLabel shareNumberLabel, JTextField shareNumberInput, JButton continueButton) {
+        layout.setVerticalGroup(
+                layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(tickerLabel)
+                                .addComponent(tickerInput))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(shareNumberLabel)
+                                .addComponent(shareNumberInput))
+                        .addComponent(continueButton)
+
+
+        );
+    }
+
+    //EFFECTS: creates the continueButton
+    private JButton createContinueButton() {
+        JButton continueButton = new JButton("Purchase");
+        continueButton.setPreferredSize(new Dimension(200, 50));
+        return continueButton;
+    }
+
+    //EFFECTS: adds an ActionListener to the continueButton. When pressed, try to purchaseShares.
+    //         catches InsufficientFundsException and CompanyNotFoundException, and displays a popup of the error.
+    private void addActionListenerToContinueButton(JButton continueButton, JTextField tickerInput,
+                                                   JTextField shareNumberInput) {
         ActionListener purchaseListener = e -> {
             String ticker = tickerInput.getText();
             String shareNumber = shareNumberInput.getText();
@@ -253,25 +335,10 @@ public class GraphicalUIApp extends JFrame {
                         "ERROR: Please enter a valid name or ticker!");
             }
         };
-
-
-        JButton continueButton = new JButton("Deposit");
-        continueButton.setBounds(WIDTH / 2 - titleWidth / 2,300, textFieldWidth, textFieldHeight);
         continueButton.addActionListener(purchaseListener);
-
-
-        jf.add(title);
-        jf.add(tickerLabel);
-        jf.add(tickerInput);
-        jf.add(shareNumberLabel);
-        jf.add(shareNumberInput);
-        jf.add(continueButton);
-
-
-        jf.setLayout(null);
-        jf.setVisible(true);
     }
 
+    //EFFECTS: sets up sellStocksMenu
     private void sellStocksMenu() {
         JOptionPane.showMessageDialog(jf, "Feature not yet implemented!");
     }
@@ -289,6 +356,7 @@ public class GraphicalUIApp extends JFrame {
         return info;
     }
 
+    //EFFECTS: creates a string object of all ListedCompanies
     public String listedCompanies() {
         String info = "";
         for (ListedCompanies c : ListedCompanies.values()) {
@@ -300,6 +368,9 @@ public class GraphicalUIApp extends JFrame {
         return info;
     }
 
+    //MODIFIES: this
+    //EFFECTS: saves portfolio JSON data in PATH
+    //         catches FileNotFoundException and throws new RuntimeException
     private void savePortfolio() {
         try {
             writer.openWriter();
