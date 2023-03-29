@@ -178,8 +178,8 @@ public class GraphicalUIApp extends JFrame {
 
         jf.getContentPane().removeAll();
         jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
-
-        jf.add(createDepositPanel());
+        jf.add(createDepositPanel(), BorderLayout.CENTER);
+        jf.add(createBackButtonPanel(), BorderLayout.SOUTH);
         jf.pack();
     }
 
@@ -220,7 +220,52 @@ public class GraphicalUIApp extends JFrame {
 
     //EFFECTS: creates the menu for withdrawing cash
     private void withdrawMenu() {
-        JOptionPane.showMessageDialog(jf, "Feature not yet implemented!");
+
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
+        jf.add(createWithdrawalPanel(), BorderLayout.CENTER);
+        jf.add(createBackButtonPanel(), BorderLayout.SOUTH);
+        jf.pack();
+    }
+
+    //MODIFIES: this
+    //EFFECTS: creates the depositPanel
+    //         catches NegativeAmountException and displays a popup of the error.
+    private JPanel createWithdrawalPanel() {
+
+        JPanel depositPanel = new JPanel();
+        depositPanel.setLayout(new FlowLayout());
+
+        JTextField textField = new JTextField();
+        textField.setPreferredSize(new Dimension(100, 50));
+        ActionListener textListener = e -> tryWithdrawal(textField);
+
+        JButton continueButton = new JButton("Withdraw");
+        continueButton.setPreferredSize(new Dimension(100, 50));
+        continueButton.addActionListener(textListener);
+
+        depositPanel.add(Box.createVerticalStrut(WIDTH / 2 + 50));
+        depositPanel.add(textField);
+        depositPanel.add(continueButton);
+
+        depositPanel.setBackground(new Color(163, 220, 239));
+
+        return depositPanel;
+    }
+
+    private void tryWithdrawal(JTextField textField) {
+        String withdrawalAmount = textField.getText();
+        try {
+            yourPortfolio.subFromBalance(Double.parseDouble(withdrawalAmount));
+            JOptionPane.showMessageDialog(jf, "Withdrawal successful!");
+            mainMenu(yourPortfolio);
+        } catch (NegativeAmountException ex) {
+            JOptionPane.showMessageDialog(jf,
+                    "ERROR: Please enter a positive withdrawal amount");
+        } catch (InsufficientFundsException ex) {
+            JOptionPane.showMessageDialog(jf,
+                    "ERROR: Insufficient funds");
+        }
     }
 
     //MODIFIES: this
@@ -229,8 +274,8 @@ public class GraphicalUIApp extends JFrame {
 
         jf.getContentPane().removeAll();
         jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
-
         jf.add(purchasePanel(), BorderLayout.CENTER);
+        jf.add(createBackButtonPanel(), BorderLayout.SOUTH);
         jf.pack();
     }
 
@@ -238,20 +283,20 @@ public class GraphicalUIApp extends JFrame {
     //EFFECTS: creates the purchaseStocksPanel
     private JPanel purchasePanel() {
         JPanel textAndLabelPanel = new JPanel();
-        JButton continueButton = createContinueButton();
-        textAndLabelPanel.setLayout(new GroupLayout(textAndLabelPanel)); // set the layout manager to GroupLayout
+        JButton continueButton = createContinueButton("Purchase shares");
+        textAndLabelPanel.setLayout(new GroupLayout(textAndLabelPanel));
 
         JLabel tickerLabel = new JLabel("Company name/ticker: ");
         tickerLabel.setFont(new Font("Serif", Font.BOLD, 16));
         JTextField tickerInput = new JTextField();
         tickerInput.setPreferredSize(new Dimension(200, 50));
 
-        JLabel shareNumberLabel = new JLabel("Shares to purchase: ");
+        JLabel shareNumberLabel = new JLabel("Number of shares: ");
         shareNumberLabel.setFont(new Font("Serif", Font.BOLD, 16));
         JTextField shareNumberInput = new JTextField();
         shareNumberInput.setPreferredSize(new Dimension(200, 50));
 
-        addActionListenerToContinueButton(continueButton, tickerInput, shareNumberInput);
+        addPurchaseListenerToContinueButton(continueButton, tickerInput, shareNumberInput);
 
         textAndLabelPanel.setBackground(new Color(163, 220, 239));
 
@@ -306,16 +351,16 @@ public class GraphicalUIApp extends JFrame {
     }
 
     //EFFECTS: creates the continueButton
-    private JButton createContinueButton() {
-        JButton continueButton = new JButton("Purchase");
+    private JButton createContinueButton(String text) {
+        JButton continueButton = new JButton(text);
         continueButton.setPreferredSize(new Dimension(200, 50));
         return continueButton;
     }
 
     //EFFECTS: adds an ActionListener to the continueButton. When pressed, try to purchaseShares.
     //         catches InsufficientFundsException and CompanyNotFoundException, and displays a popup of the error.
-    private void addActionListenerToContinueButton(JButton continueButton, JTextField tickerInput,
-                                                   JTextField shareNumberInput) {
+    private void addPurchaseListenerToContinueButton(JButton continueButton, JTextField tickerInput,
+                                                     JTextField shareNumberInput) {
         ActionListener purchaseListener = e -> {
             String ticker = tickerInput.getText();
             String shareNumber = shareNumberInput.getText();
@@ -335,9 +380,62 @@ public class GraphicalUIApp extends JFrame {
         continueButton.addActionListener(purchaseListener);
     }
 
-    //EFFECTS: sets up sellStocksMenu
+    //MODIFIES: this
+    //EFFECTS: creates the purchaseStocksMenu
     private void sellStocksMenu() {
-        JOptionPane.showMessageDialog(jf, "Feature not yet implemented!");
+
+        jf.getContentPane().removeAll();
+        jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
+        jf.add(sellPanel(), BorderLayout.CENTER);
+        jf.add(createBackButtonPanel(), BorderLayout.SOUTH);
+        jf.pack();
+    }
+
+    private JPanel sellPanel() {
+        JPanel textAndLabelPanel = new JPanel();
+        JButton continueButton = createContinueButton("Sell shares");
+        textAndLabelPanel.setLayout(new GroupLayout(textAndLabelPanel));
+
+        JLabel tickerLabel = new JLabel("Company name/ticker: ");
+        tickerLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        JTextField tickerInput = new JTextField();
+        tickerInput.setPreferredSize(new Dimension(200, 50));
+
+        JLabel shareNumberLabel = new JLabel("Number of  shares: ");
+        shareNumberLabel.setFont(new Font("Serif", Font.BOLD, 16));
+        JTextField shareNumberInput = new JTextField();
+        shareNumberInput.setPreferredSize(new Dimension(200, 50));
+
+        addSaleListenerToContinueButton(continueButton, tickerInput, shareNumberInput);
+
+        textAndLabelPanel.setBackground(new Color(163, 220, 239));
+
+        setGroupLayout(textAndLabelPanel, continueButton, tickerLabel, tickerInput, shareNumberLabel, shareNumberInput);
+
+        return textAndLabelPanel;
+    }
+
+    private void addSaleListenerToContinueButton(JButton continueButton, JTextField tickerInput,
+                                                 JTextField shareNumberInput) {
+        ActionListener purchaseListener = e -> {
+            String ticker = tickerInput.getText();
+            String shareNumber = shareNumberInput.getText();
+            if (yourPortfolio.findCompanyInStocks(ticker) != null) {
+                try {
+                    yourPortfolio.sellShares(ticker, Integer.parseInt(shareNumber));
+                    JOptionPane.showMessageDialog(jf,
+                            "Sale successful!");
+                    mainMenu(yourPortfolio);
+                } catch (NegativeAmountException ex) {
+                    JOptionPane.showMessageDialog(jf,
+                            "Please enter a valid number of shares");
+                }
+            } else {
+                JOptionPane.showMessageDialog(jf,
+                        "Company not found in list of current holdings");
+            }
+        };
+        continueButton.addActionListener(purchaseListener);
     }
 
     //MODIFIES: this
@@ -359,8 +457,8 @@ public class GraphicalUIApp extends JFrame {
 
         jf.getContentPane().removeAll();
         jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
-
         jf.add(displayPanel, BorderLayout.CENTER);
+        jf.add(createBackButtonPanel(), BorderLayout.SOUTH);
 
         jf.pack();
     }
@@ -403,6 +501,21 @@ public class GraphicalUIApp extends JFrame {
         return subPanels;
     }
 
+    private JPanel createBackButtonPanel() {
+
+        JPanel backButtonPanel = new JPanel();
+
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            jf.getContentPane().removeAll();
+            mainMenu(yourPortfolio);
+        });
+
+        backButtonPanel.add(backButton);
+
+        return backButtonPanel;
+    }
+
     //EFFECTS: Returns a String containing yourPortfolio cashBalance and list of holdings
     public ArrayList<String> portfolioHoldings() {
         ArrayList<String> companyInfo = new ArrayList<>();
@@ -430,8 +543,8 @@ public class GraphicalUIApp extends JFrame {
 
         jf.getContentPane().removeAll();
         jf.add(createTitle(), BorderLayout.BEFORE_FIRST_LINE);
-
         jf.add(displayPanel, BorderLayout.CENTER);
+        jf.add(createBackButtonPanel(), BorderLayout.SOUTH);
 
         jf.pack();
     }
@@ -488,7 +601,6 @@ public class GraphicalUIApp extends JFrame {
         writer.closeWriter();
         JOptionPane.showMessageDialog(jf, "Your portfolio has been saved!");
     }
-
 }
 
 

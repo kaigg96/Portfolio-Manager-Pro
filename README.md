@@ -46,3 +46,34 @@ holdings and cash balance.
 save my portfolio.
 
 - As a user, I want to be able to load a saved portfolio.
+
+
+**Instructions for Grader**
+
+- You can generate the first required action related to adding Xs to a Y by...
+1. Run GraphicalUIAppMain
+2. Select New Portfolio
+3. Select Deposit
+4. Input 1000 and press deposit
+5. Select Purchase Stocks
+6. Input AAPL as the company name and 1 as the shares to purchase
+7. Press the Purchase button
+
+- You can generate the second required action related to adding Xs to a Y by...
+1. Run GraphicalUIAppMain
+2. Select New Portfolio
+3. Select Browse Listed Companies
+
+- You can locate my visual component by...
+1. Run GraphicalUIAppMain
+2. Select New Portfolio
+3. Select Browse Listed Companies (logos)
+
+- You can save the state of my application by...
+1. Run GraphicalUIAppMain
+2. Select New Portfolio
+3. Select Save Portfolio
+
+- You can reload the state of my application by...
+1. Run GraphicalUIAppMain
+2. Select Load Portfolio
