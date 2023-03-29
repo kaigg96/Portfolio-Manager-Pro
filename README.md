@@ -62,7 +62,8 @@ save my portfolio.
 - You can generate the second required action related to adding Xs to a Y by...
 1. Run GraphicalUIAppMain
 2. Select New Portfolio
-3. Select Browse Listed Companies
+3. Select View Portfolio (although you probably want to make a deposit and/or 
+purchase some shares first!)
 
 - You can locate my visual component by...
 1. Run GraphicalUIAppMain
