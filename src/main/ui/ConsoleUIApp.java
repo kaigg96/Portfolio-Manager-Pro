@@ -1,6 +1,7 @@
 package ui;
 
 import model.Company;
+import model.EventLog;
 import model.ListedCompanies;
 import model.Portfolio;
 import model.exceptions.CompanyNotFoundException;
@@ -46,6 +47,7 @@ public class ConsoleUIApp {
             nextStep = userInput.next();
 
             if (nextStep.equals("9")) {
+                EventLog.getInstance().printEvents();
                 keepGoing = false; //end the loop if the user chooses "Exit Portfolio Manager Pro"
             } else {
                 processUserInput(nextStep);
@@ -70,7 +72,7 @@ public class ConsoleUIApp {
 
     // MODIFIES: this
     // EFFECTS: process user input from the main menu
-    //             inputting 7 exits the app (part of the runPortfolio method)
+    //             inputting 9 exits the app (part of the runPortfolio method)
     private void processUserInput(String userInput) {
         if (userInput.equals("1")) {
             doCashDeposit();
