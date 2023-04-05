@@ -15,6 +15,7 @@ public class Portfolio {
 
     private double cashBalance;
     private ArrayList<Company> stocks;
+    EventLog eventLog = EventLog.getInstance();
 
     //Effects: Constructs a portfolio with given cash and empty stocks
     public Portfolio(double cash) {
@@ -36,6 +37,7 @@ public class Portfolio {
     public void addToBalance(double amount) throws NegativeAmountException {
         if (amount >= 0) {
             this.cashBalance += amount;
+            eventLog.logEvent(new Event("Deposited " + amount));
         } else {
             throw new NegativeAmountException("Cannot add a negative amount to balance.");
         }
@@ -52,6 +54,7 @@ public class Portfolio {
             throw new InsufficientFundsException("Insufficient funds to subtract amount from balance");
         } else {
             this.cashBalance -= amount;
+            eventLog.logEvent(new Event("Withdrew " + amount));
         }
     }
 
@@ -79,6 +82,7 @@ public class Portfolio {
                         c.getSharePrice(),
                         c.getMktcap(),
                         shareNumber));
+                eventLog.logEvent(new Event("Purchased " + shareNumber + " shares of " + c.getName()));
             }
         }
     }
@@ -119,6 +123,7 @@ public class Portfolio {
                 } else {
                     stocks.remove(i);
                 }
+                eventLog.logEvent(new Event("Sold " + shareNumber + " shares of " + c.getName()));
             }
         }
     }
@@ -136,7 +141,7 @@ public class Portfolio {
 
     // MODIFIES: this
     // EFFECTS: constructs a company with the given arguments and adds it to stocks
-    //          does not subtract from cashBalance to purchase
+    //          does not subtract from cashBalance to purchase (used for testing only)
     public void addCompanyToStocks(String name, String ticker, double sharePrice,
                                    double marketCap, int sharesHeld) {
         stocks.add(new Company(name, ticker, sharePrice, marketCap, sharesHeld));

@@ -1,6 +1,7 @@
 package ui;
 
 import model.Company;
+import model.EventLog;
 import model.ListedCompanies;
 import model.Portfolio;
 import model.exceptions.CompanyNotFoundException;
@@ -165,7 +166,10 @@ public class GraphicalUIApp extends JFrame {
         viewPortfolioButton.addActionListener(e -> browseHoldingsMenu());
         browseCompaniesButton.addActionListener(e -> browseCompaniesMenu());
         saveButton.addActionListener(e -> savePortfolio());
-        exitButton.addActionListener(e -> jf.dispose());
+        exitButton.addActionListener(e -> {
+            jf.dispose();
+            EventLog.getInstance().printEvents();
+        });
 
         Collections.addAll(buttons, depositCashButton, withdrawCashButton, purchaseStocksButton, sellStocksButton,
                 viewPortfolioButton, browseCompaniesButton, saveButton, exitButton);
@@ -253,6 +257,10 @@ public class GraphicalUIApp extends JFrame {
         return depositPanel;
     }
 
+    //MODIFIES: this
+    //EFFECTS: attempt to withdraw given amount
+    //         catches NegativeAmountException and displays a popup of the error.
+    //         catches InsufficientFundsException and displays a popup of the error.
     private void tryWithdrawal(JTextField textField) {
         String withdrawalAmount = textField.getText();
         try {
@@ -391,6 +399,8 @@ public class GraphicalUIApp extends JFrame {
         jf.pack();
     }
 
+    //MODIFIES: this
+    //EFFECTS: creates the sellStocksPanel
     private JPanel sellPanel() {
         JPanel textAndLabelPanel = new JPanel();
         JButton continueButton = createContinueButton("Sell shares");
@@ -415,6 +425,8 @@ public class GraphicalUIApp extends JFrame {
         return textAndLabelPanel;
     }
 
+    //EFFECTS: adds an action listener to the given button
+    //         catches NegativeAmountException and displays a popup of the error.
     private void addSaleListenerToContinueButton(JButton continueButton, JTextField tickerInput,
                                                  JTextField shareNumberInput) {
         ActionListener purchaseListener = e -> {
@@ -501,6 +513,7 @@ public class GraphicalUIApp extends JFrame {
         return subPanels;
     }
 
+    //EFFECTS: creates subpanel for the backButton
     private JPanel createBackButtonPanel() {
 
         JPanel backButtonPanel = new JPanel();
