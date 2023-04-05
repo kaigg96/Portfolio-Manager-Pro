@@ -82,13 +82,18 @@ purchase some shares first!)
 **Phase 4: Task 2**
 
 Event Log: 
+
 Wed Apr 05 12:11:44 PDT 2023
 Deposited 1000.0
+
 Wed Apr 05 12:11:50 PDT 2023
 Purchased 1 shares of Microsoft
+
 Wed Apr 05 12:11:54 PDT 2023
 Withdrew 100.0
+
 Wed Apr 05 12:11:59 PDT 2023
 Deposited 252.75
+
 Wed Apr 05 12:11:59 PDT 2023
 Sold 1 shares of Microsoft
