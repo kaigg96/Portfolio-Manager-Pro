@@ -97,3 +97,19 @@ Deposited 252.75
 
 Wed Apr 05 12:11:59 PDT 2023
 Sold 1 shares of Microsoft
+
+**Phase 4: Task 3**
+
+This code could definitely be helped by refactoring. I think I could
+make use of inheritance to increase the specificity of each class 
+via the single responsibility principle. Currently, the code has very
+low coupling (there are no subtyping relationships) but as a result
+lacks cohesion. This is especially pronounced in the UI package 
+(the ConsoleUIApp and GraphicalUIApp classes), but could also 
+be applied to the Portfolio class by splitting the handling of cash
+and shares into separate classes. 
+
+Specifically for the GraphicalUIApp, I would extract each menu
+(ie. opening menu, main menu...) into their own classes, and each
+could extend the GraphicalUIApp class for shared functionality
+(ie. shared fields, and some methods like the createTitle() method).

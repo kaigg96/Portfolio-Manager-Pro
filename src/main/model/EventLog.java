@@ -36,11 +36,13 @@ public class EventLog implements Iterable<Event> {
         }
     }
 
+    //MODIFIES: this
     //EFFECTS: Adds an event to the event log.
     public void logEvent(Event e) {
         events.add(e);
     }
 
+    //MODIFIES: this
     //EFFECTS: Clears the event log and logs the event.
     public void clear() {
         events.clear();
