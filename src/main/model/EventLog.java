@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+// This code is adapted from that found in the AlarmSystem file
 //Represents a log of portfolio events.
 //Uses Singleton Design Pattern to ensure that there is only one EventLog in the system and that the system has
 //   global access to the single instance of the EventLog.

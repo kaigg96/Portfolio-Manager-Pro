@@ -3,7 +3,7 @@ package model;
 import java.util.Calendar;
 import java.util.Date;
 
-
+// This code is adapted from that found in the AlarmSystem file
 // Represents a portfolio event
 public class Event {
 
